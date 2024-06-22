@@ -1,7 +1,6 @@
 import Image from "next/image";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
-import OrderSection from "../Components/OrderSection";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
 
 
 export default function HomePage() {
@@ -13,9 +12,6 @@ export default function HomePage() {
         height={200}
         className="w-full h-auto"
         alt="Banner" />
-
-      <OrderSection />
-
       <Footer />
     </>
 

@@ -7,10 +7,10 @@ import {
   import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
   
   const navigation = [
-    { name: 'Home', href: '#', current: true },
-    { name: 'Breeds', href: '#', current: false },
-    { name: 'Who are we?', href: '#', current: false },
-    { name: 'Contact Us', href: '#', current: false },
+    { name: 'Home', href: '/', current: true },
+    { name: 'Breeds', href: '/breeds', current: false },
+    { name: 'Who are we?', href: '/about', current: false },
+    { name: 'Contact Us', href: '/contact-us', current: false },
   ]
   
   function classNames(...classes: string[]) {
