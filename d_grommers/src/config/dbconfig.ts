@@ -8,11 +8,9 @@ export async function ConnectDB() {
 
     try {
 
-        mongoose.connect(process.env.MONGO_URL!)
-        const con=mongoose.connection
-        con.on('connected',()=>{
-            console.log("DataBase Connected")
-        })
+        const con = await mongoose.connect(process.env.MONGO_URL!)
+        console.log("DataBase Connected")
+
 
     } catch (error) {
         console.log(error);

@@ -8,10 +8,19 @@ export function middleware(request: NextRequest) {
 
     const isPublicPath = path === "/login" || path === "/signup"
 
+    const isPrivatePath = path === '/my-account'
+
     const token = request.cookies.get("_grt5634")?.value || ''
+
+    console.log(isPrivatePath, path);
+
 
     if (isPublicPath && token) {
         return NextResponse.redirect(new URL('/', request.nextUrl))
+    }
+
+    if (isPrivatePath && token) {
+        return NextResponse.next()
     }
 
     if (!isPublicPath && !token) {
@@ -22,9 +31,10 @@ export function middleware(request: NextRequest) {
 // See "Matching Paths" below to learn more
 export const config = {
     matcher: [
-        '/my-account',
+
         '/login',
         '/signup',
+        '/my-account',
         '/confirm-booking'
     ],
 }

@@ -3,7 +3,7 @@ import User from "@/models/usersModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt"
 import dotenv from "dotenv"
-import jwt from "jsonwebtoken"
+import JWT from "jsonwebtoken"
 
 
 ConnectDB()
@@ -38,14 +38,19 @@ export async function POST(request: NextRequest) {
                 }, { status: 400 }
             )
         }
-        const tokenData = {
+        // type tokenData={
+        //     id:string,
+        //     username: string,
+        //     email: string,
+        // }
+         const tokenData = {
             id: User._id,
             username: User.username,
             email: User.email,
 
         }
 
-        const Token = await jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: "1d" })
+        const Token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET!, { expiresIn: "1d" })
 
         const response = NextResponse.json({
             message: "Log in successfull",

@@ -1,4 +1,6 @@
 'use client';
+import { GetuserTK } from '@/helpers/route';
+import { NextRequest } from "next/server";
 import {
   Disclosure,
   Menu,
@@ -7,6 +9,7 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -15,19 +18,44 @@ const navigation = [
   { name: 'Contact Us', href: '/contact-us', current: false },
 ]
 
+type User = {
+  email: string;
+  updatedAt: string;
+  username: string;
+  _id: string;
+};
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 const Header: React.FC = () => {
 
+
   const router = useRouter()
+  const [user, setUser] = useState<User[] | null>(null)
+
+  const GetUser = async () => {
+    try {
+      const res = await axios.get('/api/user')
+      setUser(res.data["data"])
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  useEffect(() => {
+    GetUser();
+  }, [])
+  console.log(user);
+
   const HandleLogout = async () => {
 
     try {
       const res = await axios.get("api/auth/logout")
       console.log("logout ed");
-     router.push("/login")
+      router.push("/login")
 
     } catch (error) {
       console.log(error);
@@ -108,38 +136,67 @@ const Header: React.FC = () => {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            onClick={HandleLogout}
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Log out
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
+
+                    {user != null ? (
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="/my-account"
+                              className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            >
+                              Your Account
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="/my-account/my-pets"
+                              className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            >
+                              Your Pets
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="/my-account/bookings"
+                              className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            >
+                              Bookings
+                            </a>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href=''
+                              onClick={HandleLogout}
+                              className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm pointer text-gray-700')}
+                            >
+                              Log out
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </Menu.Items>
+                    ) : (
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className='flex p-3'>
+                          <button onClick={() => { router.push('/login') }} className='bg-violet-900 min-w-24 h-11 hover:bg-violet-600 text-white font-bold  rounded'>
+                            Log In
+                          </button>
+
+                          <button onClick={() => { router.push('/signup') }} className='bg-violet-900 ml-3 min-w-24 h-11 hover:bg-violet-600 text-white font-bold  rounded'>
+                            Sign Up
+                          </button>
+                        </div>
+                      </Menu.Items>
+
+                    )}
+
+
                   </Transition>
                 </Menu>
               </div>
