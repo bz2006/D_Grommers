@@ -48,13 +48,11 @@ const Header: React.FC = () => {
   useEffect(() => {
     GetUser();
   }, [])
-  console.log(user);
 
   const HandleLogout = async () => {
 
     try {
       const res = await axios.get("api/auth/logout")
-      console.log("logout ed");
       router.push("/login")
 
     } catch (error) {
@@ -85,7 +83,7 @@ const Header: React.FC = () => {
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="h-8 w-auto"
-                    src="./d_grommers.png"
+                    src="https://static-vision.s3.ap-south-1.amazonaws.com/d_grommers.png"
                     alt="D_Grommer"
                   />
                 </div>

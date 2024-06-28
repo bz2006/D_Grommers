@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
 
     try {
         const userid = await GetuserTK(request)
-        console.log("userid",userid);
         
         const userdata = await User.findOne({_id:userid}).select('-password -__v -addresses -bookings -createdAt -role -updatedAt');
         if(userdata){
@@ -28,7 +27,11 @@ export async function GET(request: NextRequest) {
         
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return NextResponse.json({
+            message: 'Internal Server Error',
+            status: 500,
+        });
 
     }
 
