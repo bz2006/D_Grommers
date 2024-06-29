@@ -20,8 +20,8 @@ const navigation = [
 
 type User = {
   email: string;
+  username:string;
   updatedAt: string;
-  username: string;
   _id: string;
 };
 function classNames(...classes: string[]) {
@@ -61,6 +61,7 @@ const Header: React.FC = () => {
     }
 
   }
+console.log();
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -137,6 +138,15 @@ const Header: React.FC = () => {
 
                     {user != null ? (
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            >
+                              Hi, {user?.username}
+                            </a>
+                          )}
+                        </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
                             <a

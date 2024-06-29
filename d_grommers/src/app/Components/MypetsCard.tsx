@@ -4,9 +4,10 @@ import React from 'react'
 type Props = {
     key: string;
     petname: string;
+    onClick:() => void;
 }
 
-const MypetsCard: React.FC<Props> = ({ petname }) => {
+const MypetsCard: React.FC<Props> = ({ petname,onClick }) => {
     return (
 
 

@@ -19,30 +19,25 @@ type Breed = {
   __v: number,
 }
 
-const SingleBreed = (params: Props) => {
+const GetBreed = async (id:string) => {
 
-  console.log(params.params.id);
-  const id = params.params.id
-  const [breed, setBreed] = useState<Breed | null>(null);
-
-  const GetBreed = async () => {
-
-    try {
-      const res = await axios.get(`/api/breeds/getsinglebreed/${id}`)
-      setBreed(res.data['data'])
-      console.log(res.data['data']);
+  try {
     
-    } catch (error) {
-      console.log(error);
+    const res = await axios.get(`/api/breeds/getsinglebreed/${id}`)
+    return res.data['data']
 
-    }
+  } catch (error) {
+    console.log(error);
 
   }
 
-  useEffect(() => {
+}
 
-    GetBreed()
-  }, [])
+const SingleBreed = async (params: Props) => {
+
+  const id = params.params.id
+  const breed = await GetBreed(id)
+console.log(breed);
 
 
   return (

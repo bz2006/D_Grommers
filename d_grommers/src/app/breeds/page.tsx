@@ -1,9 +1,7 @@
-'use client'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
 import BreedsCard from '../Components/BreedsCard'
-import { useRouter } from 'next/navigation'
 import axios from 'axios'
 
 type Breed = {
@@ -13,42 +11,31 @@ type Breed = {
   updatedAt: string,
   __v: number,
 }
+const GetBreeds = async () => {
 
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/breeds/getallbreeds`)
+    return res.data["data"]
+    //setBreeds()
 
-const BreedsPage = (props: Breed) => {
-
-  const [breeds, setBreeds] = useState<Breed[]>([])
-  const router = useRouter()
-
-  const Navigate = (id: string) => {
-
-    router.push(`/breeds/${id}`)
-
-  }
-
-  const GetBreeds = async () => {
-
-    try {
-      const res = await axios.get('/api/breeds/getallbreeds')
-      setBreeds(res.data["data"]);
-      //setBreeds()
-
-    } catch (error) {
-      console.log(error);
-
-    }
+  } catch (error) {
+    console.log(error);
 
   }
+
+}
+
+const BreedsPage = async() => {
+
+  const breeds=await GetBreeds()
   console.log(breeds);
+  
 
-  useEffect(() => {
-    GetBreeds()
-  }, [])
   return (
     <>
       <Header />
       <div className="p-10 flex flex-wrap items-center justify-center">
-        {breeds && breeds.map((breed) => (
+        {breeds && breeds.map((breed: Breed) => (
           <BreedsCard
             key={breed._id}
             id={breed._id}
