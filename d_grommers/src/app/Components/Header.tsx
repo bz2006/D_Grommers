@@ -37,6 +37,9 @@ const Header: React.FC = () => {
   const GetUser = async () => {
     try {
       const res = await axios.get('/api/user')
+
+  console.log(res.data["data"]['_id']);
+  
       setUser(res.data["data"])
 
     } catch (error) {
@@ -170,10 +173,10 @@ console.log();
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="/my-account/bookings"
+                              href="/my-account/schedules"
                               className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                             >
-                              Bookings
+                            Schedules
                             </a>
                           )}
                         </Menu.Item>

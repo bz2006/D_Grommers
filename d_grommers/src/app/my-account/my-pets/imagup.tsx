@@ -6,6 +6,7 @@ const ImageUpload = () => {
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
+        
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImage(imageUrl);

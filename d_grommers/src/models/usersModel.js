@@ -1,4 +1,4 @@
-import {mongoose} from "mongoose"
+import { mongoose } from "mongoose"
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -19,6 +19,18 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    pets: [{
+        petname: {
+            type: String,
+        },
+        dob: {
+            type: String,
+        },
+        breed: {
+            type: String,
+        },
+
+    }],
     addresses: [{
         name: {
             type: String,
@@ -41,17 +53,17 @@ const userSchema = new mongoose.Schema({
         phone: {
             type: Number
         }
-    
+
     }],
-    defaddress:{
-        type:String,
+    defaddress: {
+        type: String,
     },
     role: {
         type: Number,
         default: 0,
     },
-    date:{
-        type:String,
+    date: {
+        type: String,
     },
 
 },

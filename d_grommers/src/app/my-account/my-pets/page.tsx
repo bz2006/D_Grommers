@@ -2,20 +2,111 @@
 import Footer from '@/app/Components/Footer'
 import Header from '@/app/Components/Header'
 import MypetsCard from '@/app/Components/MypetsCard'
+import { message } from 'antd'
 import { Button, Modal } from 'antd';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ImageUpload from './imagup';
+import axios from 'axios';
 import TextField from '@/app/Components/Textfield';
-import SearchDropdown from '@/app/Components/SearchDropdown';
 
-type Props = {}
+type Props = {
+
+}
+type Pet = {
+    _id: string;
+    petname: string;
+    dob: string;
+    breed: string;
+}
 
 const MyPets = (props: Props) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isdetModalOpen, setIsdetModalOpen] = useState(false);
+    const [Pets, setPets] = useState<Pet[]>([]);
+    const [Updateid, setUpdateid] = useState("");
     const [name, setName] = useState("");
     const [DOB, setDOB] = useState("");
     const [breed, setBreed] = useState("");
+
+    const GetUser = async () => {
+        try {
+            const res = await axios.get('/api/user')
+
+            return res.data["data"]['_id'];
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const GetPets = async () => {
+
+        try {
+            const id = await GetUser()
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/getallpets/${id}`)
+            setPets(res.data["data"])
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+    useEffect(() => {
+        GetPets()
+    }, [])
+
+
+    const AddPet = async () => {
+
+        try {
+            const id = await GetUser()
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/addpet`, { userid: id, petname: name, dob: DOB, breed: breed })
+            CloseModel()
+            GetPets()
+            message.success(`${name} added successfully`)
+            
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const UpdatePet = async () => {
+
+        try {
+            const id = await GetUser()
+            const newDetails = {
+                petname: name,
+                dob: DOB,
+                breed: breed
+            }
+            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/updatepet`, { userid: id, upid: Updateid, newDetails: newDetails })
+            ClosedetModel()
+            GetPets()
+            message.success(`${name} details updated successfully`)
+            setName("")
+            setDOB("")
+            setBreed("")
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+    const DeletePet = async () => {
+
+        try {
+            const id = await GetUser()
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/deletepet`, { userid: id, upid: Updateid })
+            ClosedetModel()
+            GetPets()
+            setUpdateid("")
+            message.success(`${name} deleted successfully`)
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
 
     const Setname = (value: string) => {
         setName(value)
@@ -29,19 +120,95 @@ const MyPets = (props: Props) => {
         setBreed(value)
     }
 
-    const HandleUpdate =  () => {
-        console.log('updated');
+    const CloseModel = () => {
+        setIsModalOpen(false)
+        setName("")
+        setDOB("")
+        setBreed("")
+    }
+    const ClosedetModel = () => {
+        setIsdetModalOpen(false)
+        setName("")
+        setDOB("")
+        setBreed("")
+        setUpdateid("")
+    }
 
+    const OpenDetails = (id: string) => {
+console.log('clicked');
 
+        for (let det of Pets) {
+            if (det._id === id) {
+                setName(det.petname)
+                setDOB(det.dob)
+                setBreed(det.breed)
+                setUpdateid(det._id)
+                setIsdetModalOpen(true)
+            } 
+        }
     }
 
     return (
         <>
             <Header />
             <Button type="primary" onClick={() => { setIsModalOpen(true) }}>
-                Open Modal
+                Add new pet
             </Button>
-            <Modal title="Add Your Pet" open={isModalOpen} width={400} onCancel={() => { setIsModalOpen(false) }}>
+
+            <Modal title="Add Your Pet" open={isModalOpen} onOk={AddPet} width={400} onCancel={CloseModel}>
+                <div className='mt-2'>
+                    <ImageUpload />
+                </div>
+
+                <div className='flex items-center justify-evenly flex-col mt-7'>
+                    <TextField
+                        label='Name'
+                        placeholder='Name'
+                        value={name}
+                        onChange={Setname}
+                    />
+                    <TextField
+                        label='DOB'
+                        placeholder='Date of Birth'
+                        value={DOB}
+                        onChange={SetDOB}
+                    />
+                    <TextField
+                        label='Breed'
+                        placeholder='Golden Retriver'
+                        value={breed}
+                        onChange={SetBreed}
+                    />
+                </div>
+            </Modal>
+
+            {/* Details Model */}
+            <Modal title="Your Pet Details"
+                footer={[
+                    <div className='flex flex-col sm:flex-row justify-between items-center w-full' key="footer">
+                        <Button
+                            type="primary"
+                            key="book"
+                            className='mb-2 sm:mb-0'
+                        >
+                            Schedule Grooming
+                        </Button>
+                        <div className='flex space-x-2 '>
+                            <Button key="submit" danger
+                                onClick={DeletePet}
+                            >
+                                Delete
+                            </Button>
+                            <Button
+                                key="update"
+                                onClick={UpdatePet}
+                            >
+                                Save Changes
+                            </Button>
+                        </div>
+                    </div>
+                ]}
+                open={isdetModalOpen} width={500} onCancel={ClosedetModel}>
                 <div className='mt-2'>
                     <ImageUpload />
                 </div>
@@ -68,11 +235,14 @@ const MyPets = (props: Props) => {
                 </div>
             </Modal>
             <div className="grid grid-cols-1 gap-8 p-10  sm:grid-cols-2 lg:grid-cols-4">
-                <MypetsCard
-                    key='1'
-                    petname='Bingo'
-                    onClick={HandleUpdate}
-                />
+                {Pets.length > 0 && Pets.map((pet) => (
+                    <MypetsCard
+                        key={pet._id}
+                        petname={pet.petname}
+                        onClick={() => OpenDetails(pet._id)}
+                    />
+                ))}
+
             </div>
             <Footer />
         </>

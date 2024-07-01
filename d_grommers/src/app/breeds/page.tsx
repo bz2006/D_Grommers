@@ -25,11 +25,17 @@ const GetBreeds = async () => {
 
 }
 
-const BreedsPage = async() => {
-
-  const breeds=await GetBreeds()
+const BreedsPage = async () => {
+  let loaded = false
+  let breeds
+  if (loaded === false) {
+    breeds = await GetBreeds()
+    loaded = true
+  }
   console.log(breeds);
-  
+
+
+
 
   return (
     <>
