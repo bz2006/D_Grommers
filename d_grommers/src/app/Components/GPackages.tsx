@@ -5,9 +5,12 @@ type Props = {
   packagename: string;
   packagedescription: string;
   charge: number;
+  services: string[];
+  keyProp: string;
+  onClick: (key: string) => void;
 }
 
-const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge }) => {
+const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge, services,onClick,keyProp }) => {
   return (
 
 
@@ -20,32 +23,25 @@ const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge })
         <span className="text-5xl font-extrabold text-white">₹{charge}</span>
       </div>
       <ul className="mb-8 space-y-4 text-gray-400">
-        <li className="flex items-center">
-          <svg
-            className="h-6 w-6 text-green-500 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-          </svg>
-          <span>1 user account</span>
-        </li>
-        <li className="flex items-center">
-          <svg
-            className="h-6 w-6 text-green-500 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-          </svg>
-          <span>Basic support</span>
-        </li>
+        {services.length > 0 && services.map((srv,index) => (
+          <li className="flex items-center" key={index}>
+            <svg
+              className="h-6 w-6 text-green-500 mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{srv}</span>
+          </li>
+        ))}
+
       </ul>
       <a
-        href="#"
+        href="/confirm-booking"
+        onClick={()=>onClick(keyProp)}
         className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
       >
         Book Now

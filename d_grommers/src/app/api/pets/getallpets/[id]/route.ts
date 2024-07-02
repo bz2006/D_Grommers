@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
         const url = new URL(request.url);
         const id = url.pathname.split('/').pop();
         
+        
         const user = await User.findById(id)
         if (!user) {
             return NextResponse.json({

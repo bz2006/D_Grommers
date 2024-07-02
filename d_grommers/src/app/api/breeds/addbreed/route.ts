@@ -11,10 +11,10 @@ export async function POST(request: NextRequest) {
     try {
 
         const reqBody = await request.json()
-        const { breedname } = reqBody
-        console.log(reqBody);
+        const { breedname, packages } = reqBody
+        //console.log(reqBody);
 
-        const breed = await Breeds.findOne({ breedname: "breedname" })
+        const breed = await Breeds.findOne({ breedname: breedname })
 
         if (breed) {
             return NextResponse.json(
@@ -26,10 +26,17 @@ export async function POST(request: NextRequest) {
 
 
         const NewBreed = new Breeds({
-            breedname: 'Doberman',
+            breedname: breedname,
+            groomingPackages: {
+                puppy: packages.puppy,
+                teenage: packages.teenage,
+                adult: packages.adult
+            }
         })
 
-        const savedbreed = await NewBreed.save()
+        console.log(NewBreed);
+
+        await NewBreed.save()
 
         return NextResponse.json({
             message: "Breed Added",
