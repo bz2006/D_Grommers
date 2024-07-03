@@ -88,7 +88,7 @@ console.log();
                   <img
                     className="h-8 w-auto"
                     src="https://static-vision.s3.ap-south-1.amazonaws.com/d_grommers.png"
-                    alt="D_Grommer"
+                    alt="D_Groomer"
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
