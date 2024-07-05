@@ -4,8 +4,8 @@ type Props = {}
 
 const ReviewBooking = (props: Props) => {
     return (
-        <div className='flex gap-5 p-20'>
-            <div className='bg-white w-96 h-96'>
+        <div className="flex flex-col sm:flex-row gap-5 pt-10 md:p-20 md:justify-center w-full">
+            <div className='bg-white w-full md:w-96 md:h-96'>
 
                 <div className=' flex flex-row items-center justify-between p-5 border-b border-gray-400'>
                     <h1 className='text-black'>ADDRESS</h1>
@@ -34,7 +34,7 @@ const ReviewBooking = (props: Props) => {
 
             {/* Subtotal */}
 
-            <div className='bg-white w-96 h-96 p-5 rounded-lg'>
+            <div className='bg-white w-full md:w-96 md:h-96 p-5 md:rounded-lg'>
 
                 <div className='mb-3 mt-3'>
                     <h2 className='text-black'>SUB TOTAL</h2>
@@ -61,12 +61,17 @@ const ReviewBooking = (props: Props) => {
                 </div>
 
 
-                <div className='mt-5 flex items-center justify-between'>
+                <div className='hidden md:flex mt-5 items-center justify-between'>
                     <button className='bg-green-500 text-blue-800 p-3 md:w-[350px] rounded-md hover:bg-green-300'>
                         Button
                     </button>
                 </div>
-
+                
+                <div className='sm:flex md:hidden fixed bottom-0 left-0 w-full bg-blue-800 justify-center items-center p-4'>
+                    <button className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto h-12 hover:bg-gray-100'>
+                        Button
+                    </button>
+                </div>
 
             </div>
         </div>

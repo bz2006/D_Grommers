@@ -8,7 +8,9 @@ type Props = {}
 
 const TimeSlotSteps = (props: Props) => {
 
-    const [Days, setDays] = useState<{ dayNumber: number, dayName: string }[]>([])
+    const [Days, setDays] = useState<{ dayNumber: number, dayName: string, month: number, year: number }[]>([])
+    const [date, setdate] = useState("")
+    const [time, setTime] = useState("")
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +22,6 @@ const TimeSlotSteps = (props: Props) => {
             });
         }
     };
-
     const scrollRight = () => {
         if (scrollRef.current) {
             scrollRef.current.scrollBy({
@@ -31,32 +32,38 @@ const TimeSlotSteps = (props: Props) => {
     };
 
     const onChangeDate = (dateString: any) => {
-        console.log(dateString);
 
         if (dateString) {
             const month = dateString.$d.getMonth();
             const year = dateString.$d.getFullYear();
-            console.log(month, "==", year);
-            console.log(getAllDaysInMonth(month, year))
             setDays(getAllDaysInMonth(month, year))
         }
     }
-    const getAllDaysInMonth = (month: number, year: number): { dayNumber: number, dayName: string }[] => {
+    const getAllDaysInMonth = (month: number, year: number): { dayNumber: number, dayName: string, month: number, year: number }[] => {
         const date = new Date(year, month, 1);
         const days = [];
         while (date.getMonth() === month) {
             const formattedDayName = format(new Date(date), 'EEEE').slice(0, 3); // Extract first three characters
             days.push({
                 dayNumber: date.getDate(),
-                dayName: formattedDayName
+                dayName: formattedDayName,
+                month: month + 1, // Add 1 to make the month 1-indexed (e.g., 7 for July)
+                year: date.getFullYear()
             });
             date.setDate(date.getDate() + 1);
         }
         return days;
-    }; const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    };
 
+    const Selectdate = (dayName: string,dayNumber: number,month:number,year:number) => {
+        console.log(dayName,dayNumber,month,year );
 
+    }
 
+    const SelectTime = () => {
+
+    }
+console.log(Days);
 
     return (
         <div>
@@ -64,7 +71,7 @@ const TimeSlotSteps = (props: Props) => {
                 <DatePicker picker="month" size='large' onChange={onChangeDate} format={"MMMM YYYY"} />
                 <div className='flex pr-2'>
                     <button
-                        className='hidden md:block bg-white px-3 mr-5 font-bold text-black rounded-md'
+                        className='hidden md:block bg-white px-3 mr-2 font-bold text-black rounded-md'
                         onClick={scrollLeft}
                     >&lt;</button>
                     <button
@@ -76,13 +83,14 @@ const TimeSlotSteps = (props: Props) => {
 
 
             <div className='flex space-x-4 p-2 overflow-x-scroll w-[300px] md:w-[600px] CBhide-scrollbar' ref={scrollRef}>
-                {days.map((day, index) => (
+                {Days.map((day, index) => (
                     <div
+                        onClick={() => { Selectdate(day.dayName,day.dayNumber,day.month,day.year ) }}
                         key={index}
                         className='flex hover:cursor-pointer bg-slate-50 min-w-24 max-w-24 h-32 rounded-md items-center justify-center flex-col shrink-0'
                     >
-                        <h1 className='text-black text-xl'>{day}</h1>
-                        <h1 className='text-black text-2xl m-3 font-bold'>{index + 1}</h1>
+                        <h1 className='text-black text-xl'>{day.dayName}</h1>
+                        <h1 className='text-black text-2xl m-3 font-bold'>{day.dayNumber}</h1>
                         <h1 className='text-black text-sm'>Slot</h1>
                     </div>
                 ))}
