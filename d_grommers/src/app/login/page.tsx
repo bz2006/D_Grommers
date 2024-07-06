@@ -10,8 +10,8 @@ type Props = {}
 const Login = (props: Props) => {
     const router = useRouter()
     ConnectDB()
-    const [email, setemail] = useState("")
-    const [password, setpassword] = useState("")
+    const [email, setemail] = useState("bz@gmail.com")
+    const [password, setpassword] = useState("b")
 
     const HandleLogin = async () => {
 

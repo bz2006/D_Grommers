@@ -1,12 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState,ChangeEvent  } from 'react';
 import { Button, Modal, Input } from 'antd';
 
 type Props = {}
+interface NewAddress {
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    pin:  string;
+    phone: string ;
+  }
 
 const AddressStep = (props: Props) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const[iseditModalOpen,setiseditModalOpen]=useState(false);
+    const [Alladdress, setallAdrs] = useState([])
+    const [selectedaddress, setSelectedadrs] = useState([])
+    const [NewAddress, setNewAddresss] = useState<NewAddress>({
+      name: "",
+      address: "",
+      city: "",
+      state: "",
+      country: "",
+      pin: "",
+      phone: ""
+    });
+  
+    const {name, address, city, state, country, pin } = NewAddress;
+    console.log({ name,address, city, state, country, pin });
+  
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        
+        setNewAddresss(prevFormData => ({
+            ...prevFormData,
+            [name]: value
+          }));
+    };
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -26,6 +58,15 @@ const AddressStep = (props: Props) => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        setNewAddresss({
+            name: "",
+            address: "",
+            city: "",
+            state: "",
+            country: "",
+            pin: "",
+            phone: ""
+          });
     };
 
     return (
@@ -68,15 +109,15 @@ const AddressStep = (props: Props) => {
 
             <Modal title="Add New Address" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 
-                <Input placeholder="Name" size='large' className='mb-5' />
-                <Input placeholder="Address" size='large' className='mb-5' />
+                <Input placeholder="Name" name='name' value={NewAddress.name} onChange={handleChange} size='large' className='mb-5' />
+                <Input placeholder="Address" name='address' value={NewAddress.address} onChange={handleChange} size='large' className='mb-5' />
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-                    <Input placeholder="City" size='large' />
-                    <Input placeholder="State" size='large' />
-                    <Input placeholder="Country" size='large' />
-                    <Input placeholder="Pincode" size='large' />
-                    <Input placeholder="Phone Number " size='large' />
+                    <Input placeholder="City" name='city' value={NewAddress.city} onChange={handleChange} size='large' />
+                    <Input placeholder="State" name='state' value={NewAddress.state} onChange={handleChange} size='large' />
+                    <Input placeholder="Country" name='country' value={NewAddress.country} onChange={handleChange} size='large' />
+                    <Input placeholder="Pincode" name='pin' value={NewAddress.pin} onChange={handleChange} size='large' />
+                    <Input placeholder="Phone Number" name='phone' value={NewAddress.phone} onChange={handleChange}  size='large' />
                 </div>
             </Modal >
 

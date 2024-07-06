@@ -13,7 +13,7 @@ type Props = {}
 const ConfirmBooking = (props: Props) => {
 
   const [CurrentStep, setCurrentStep] = useState(0)
-
+ 
   const Steps = [
     <AddressStep />,
     <TimeSlotSteps />,
@@ -22,13 +22,13 @@ const ConfirmBooking = (props: Props) => {
   ]
 
   const NextStep = () => {
-    if (CurrentStep<=2) {
+    if (CurrentStep <= 2) {
       setCurrentStep(CurrentStep + 1)
     }
   }
 
   const BAckStep = () => {
-    if (CurrentStep!=0) {
+    if (CurrentStep != 0) {
       setCurrentStep(CurrentStep - 1)
     }
   }
@@ -49,7 +49,7 @@ const ConfirmBooking = (props: Props) => {
 
 
       <div className='fixed bottom-0 left-0 w-full bg-blue-800 flex justify-center items-center p-3'>
-      <button onClick={BAckStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
+        <button onClick={BAckStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
           back
         </button>
         <button onClick={NextStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
