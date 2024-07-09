@@ -18,8 +18,9 @@ const ConfirmBooking = (props: Props) => {
     <AddressStep />,
     <TimeSlotSteps />,
     <PaymentMStep />,
-    <ReviewBooking />
+    <ReviewBooking setCurrentStep={setCurrentStep} />
   ]
+
 
   const NextStep = () => {
     if (CurrentStep <= 2) {

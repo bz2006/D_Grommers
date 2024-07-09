@@ -5,39 +5,39 @@ import User from "@/models/usersModel";
 
 
 ConnectDB()
-export async function PUT(request: NextRequest) {
+export async function POST(request: NextRequest) {
 
     try {
         const reqBody = await request.json()
-        const { userid, upid, newAddress } = reqBody;
-        const id = { upid };
+        const { userid, adid } = reqBody;
+        const id = { adid };
         
         
         const userdata = await User.findById(userid)
         
         if(userdata){
 
-            const AddressIndex = userdata.addresses.findIndex(
-                (pet: { _id: any }) => pet._id.toString() === String(id.upid) // Ensure pet._id is treated as a string
+            const petIndex = userdata.addresses.findIndex(
+                (adrs: { _id: any }) => adrs._id.toString() === String(id.adid) // Ensure pet._id is treated as a string
             );
-              if (AddressIndex === -1) {
+              if (petIndex === -1) {
                 return NextResponse.json({
                     message: 'Invalid pet details ID',
                     status: 404,
                 })
               }
           
-          console.log(AddressIndex,newAddress,id,upid);
+          console.log(petIndex,id,adid);
           
-              const updatedUser = await User.updateOne(
-                { _id: userid, "addresses._id": Object(upid) },
-                { $set: { "addresses.$": newAddress } }
-              );
+          const deletepet = await User.updateOne(
+            { _id: userid },
+            { $pull: { "addresses": { _id: Object(adid) } } }
+          );
           
 
-              if (updatedUser.modifiedCount === 0) {
+              if (!deletepet) {
                 return NextResponse.json({
-                    message: 'address not found',
+                    message: 'Details not found',
                     status: 404,
                 })
               }else{

@@ -1,31 +1,34 @@
 import React from 'react'
 
-type Props = {}
+type Props = {
+  setCurrentStep: (step: number) => void;
+}
 
-const ReviewBooking = (props: Props) => {
+const ReviewBooking = ({ setCurrentStep }: Props) => {
+    
     return (
         <div className="flex flex-col sm:flex-row gap-5 pt-10 md:p-20 md:justify-center w-full">
             <div className='bg-white w-full md:w-96 md:h-96'>
 
-                <div className=' flex flex-row items-center justify-between p-5 border-b border-gray-400'>
+                <div onClick={() => setCurrentStep(0)} className=' flex flex-row items-center justify-between p-5 border-b border-gray-400 hover:cursor-pointer'>
                     <h1 className='text-black'>ADDRESS</h1>
                     <p className='text-black'>My Home<br />997 Bekasi West Java,</p>
                     <h1 className='text-black'>&gt;</h1>
                 </div>
 
-                <div className='flex flex-row items-center justify-between p-5 border-b border-gray-400'>
+                <div onClick={() => setCurrentStep(1)} className='flex flex-row items-center justify-between p-5 border-b border-gray-400 hover:cursor-pointer'>
                     <h1 className='text-black'>SCHEDULE</h1>
                     <p className='text-black'>July 7, 1 AM</p>
                     <h1 className='text-black'>&gt;</h1>
                 </div>
 
-                <div className='flex flex-row items-center justify-between p-5 border-b border-gray-400'>
+                <div onClick={() => setCurrentStep(2)} className='flex flex-row items-center justify-between p-5 border-b border-gray-400 hover:cursor-pointer'>
                     <h1 className='text-black'>PAYMENT</h1>
                     <p className='text-black'>Pay Online Now</p>
                     <h1 className='text-black'>&gt;</h1>
                 </div>
 
-                <div className='flex flex-row items-center justify-between p-5 border-b border-gray-400'>
+                <div onClick={() => setCurrentStep(3)} className='flex flex-row items-center justify-between p-5 border-b border-gray-400 hover:cursor-pointer'>
                     <h1 className='text-black'>PACKAGE</h1>
                     <p className='text-black'>Puppy Deluxe</p>
                     <h1 className='text-black'>&gt;</h1>

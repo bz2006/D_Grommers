@@ -9,35 +9,34 @@ export async function PUT(request: NextRequest) {
 
     try {
         const reqBody = await request.json()
-        const { userid, upid, newAddress } = reqBody;
-        const id = { upid };
+        const { userid, adid, newAddress } = reqBody;
+        const id = { adid };
         
         
         const userdata = await User.findById(userid)
         
         if(userdata){
 
-            const AddressIndex = userdata.addresses.findIndex(
-                (pet: { _id: any }) => pet._id.toString() === String(id.upid) // Ensure pet._id is treated as a string
+            const adrsIndex = userdata.addresses.findIndex(
+                (adrs: { _id: any }) => adrs._id.toString() === String(id.adid) // Ensure pet._id is treated as a string
             );
-              if (AddressIndex === -1) {
+              if (adrsIndex === -1) {
                 return NextResponse.json({
                     message: 'Invalid pet details ID',
                     status: 404,
                 })
               }
           
-          console.log(AddressIndex,newAddress,id,upid);
           
               const updatedUser = await User.updateOne(
-                { _id: userid, "addresses._id": Object(upid) },
+                { _id: userid, "addresses._id": Object(adid) },
                 { $set: { "addresses.$": newAddress } }
               );
           
 
               if (updatedUser.modifiedCount === 0) {
                 return NextResponse.json({
-                    message: 'address not found',
+                    message: 'Details not found',
                     status: 404,
                 })
               }else{
