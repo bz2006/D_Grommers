@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState, useRef } from 'react'
 import { DatePicker, message, Space } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 import { format } from 'date-fns';
 import "./Hidescroll.css"
 
@@ -108,10 +109,15 @@ const TimeSlotSteps = (props: Props) => {
         localStorage.setItem("_dgBkDT", JSON.stringify(slot));
     }
 
+
+    const disabledDate = (current: Dayjs | undefined): boolean => {
+        return !!current && current.isBefore(dayjs(), 'day');
+      };
+
     return (
         <div>
             <div className='p-2 flex justify-between'>
-                <DatePicker picker="month" size='large' onChange={onChangeDate} format={"MMMM YYYY"} />
+                <DatePicker picker="month" size='large'disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
                 <div className='flex pr-2'>
                     <button
                         className='hidden md:block bg-white px-3 mr-2 font-bold text-black rounded-md'
