@@ -91,7 +91,7 @@ const AddressStep = (props: Props) => {
             const id = await GetUser()
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/address/newaddress`, { userid: id, NewAddress: NewAddress })
             handleCancel()
-            //GetAddress()
+            GetAddress()
             message.success('Address added successfully')
 
         } catch (error) {
@@ -126,12 +126,12 @@ const AddressStep = (props: Props) => {
         }]);
     }
     
-    const UpdatePet = async () => {
+    const UpdateAddress = async () => {
 
         try {
             const id = await GetUser()
-            const upid = selectedaddress[0]._id;
-            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/address/updateaddress`, { userid: id, upid: upid, newAddress: selectedaddress })
+            const adid = selectedaddress[0]._id;
+            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/address/updateaddress`, { userid: id, adid: adid, newAddress: selectedaddress })
             handleeditCancel()
             GetAddress()
             message.success("Address updated successfully")
@@ -184,6 +184,11 @@ const AddressStep = (props: Props) => {
     const handleOk = () => {
         AddAdress()
         setIsModalOpen(false);
+    };
+
+    const handleeditOk = () => {
+        UpdateAddress()
+        handleeditCancel
     };
 
     const handleCancel = () => {
@@ -245,7 +250,7 @@ const AddressStep = (props: Props) => {
 
             {/* Edit Address */}
 
-            <Modal title="Edit Address" open={iseditModalOpen} onOk={handleOk} onCancel={handleeditCancel}>
+            <Modal title="Edit Address" open={iseditModalOpen} onOk={handleeditOk} onCancel={handleeditCancel}>
                         <Input placeholder="Name" size='large' name='name' value={selectedaddress[0]?.name}  onChange={handleUpdateChange} className='mb-5' />
                         <Input placeholder="Address" size='large' name='address' value={selectedaddress[0]?.address}  onChange={handleUpdateChange} className='mb-5' />
 

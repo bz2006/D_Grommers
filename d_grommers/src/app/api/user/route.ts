@@ -1,53 +1,26 @@
+
+
+
 import { ConnectDB } from "@/config/dbconfig";
-import { NextRequest,NextResponse } from "next/server";
 import User from "@/models/usersModel";
+import { GetuserTK } from "@/helpers/route";
+import { NextRequest, NextResponse } from "next/server";
 
 
+ConnectDB
 
-ConnectDB()
-export async function PUT(request: NextRequest) {
+
+export async function GET(request: NextRequest) {
 
     try {
-        const reqBody = await request.json()
-        const { userid, upid, newAddress } = reqBody;
-        const id = { upid };
+        const userid = await GetuserTK(request)
         
-        
-        const userdata = await User.findById(userid)
-        
+        const userdata = await User.findOne({_id:userid}).select('-password -__v -addresses -bookings -createdAt -role -updatedAt');
         if(userdata){
-
-            const AddressIndex = userdata.addresses.findIndex(
-                (pet: { _id: any }) => pet._id.toString() === String(id.upid) // Ensure pet._id is treated as a string
-            );
-              if (AddressIndex === -1) {
-                return NextResponse.json({
-                    message: 'Invalid pet details ID',
-                    status: 404,
-                })
-              }
-          
-          console.log(AddressIndex,newAddress,id,upid);
-          
-              const updatedUser = await User.updateOne(
-                { _id: userid, "addresses._id": Object(upid) },
-                { $set: { "addresses.$": newAddress } }
-              );
-          
-
-              if (updatedUser.modifiedCount === 0) {
-                return NextResponse.json({
-                    message: 'address not found',
-                    status: 404,
-                })
-              }else{
-                return NextResponse.json({
-                    message: 'Success',
-                    status: 200
-                })
-              }
-
-            
+            return NextResponse.json({
+                message: 'Success',
+                data: userdata
+            })
         }else{
             return NextResponse.json({
                 message: 'false',

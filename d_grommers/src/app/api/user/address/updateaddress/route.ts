@@ -12,7 +12,6 @@ export async function PUT(request: NextRequest) {
         const { userid, adid, newAddress } = reqBody;
         const id = { adid };
         
-        
         const userdata = await User.findById(userid)
         
         if(userdata){
