@@ -1,5 +1,9 @@
 import { Radio, Checkbox } from 'antd'
+<<<<<<< HEAD
 import React, { useState, ChangeEvent } from 'react'
+=======
+import React, { useState, ChangeEvent,useEffect } from 'react'
+>>>>>>> origin/master
 
 type Props = {}
 
@@ -16,14 +20,40 @@ const PaymentMStep = (props: Props) => {
     const ChangeOngroom = (target: boolean) => {
         setOngroomMethod(target)
         setOnlineMethod(false)
+<<<<<<< HEAD
 
+=======
+        const method={
+            paymentMethod:"On-groom-pay"
+        }
+        localStorage.setItem("_dgBkPM", JSON.stringify(method));
+>>>>>>> origin/master
     }
 
     const ChangeOnline = (target: boolean) => {
         setOnlineMethod(target)
         setOngroomMethod(false)
+<<<<<<< HEAD
     }
 
+=======
+        const method={
+            paymentMethod:"Online-pay"
+        }
+        localStorage.setItem("_dgBkPM", JSON.stringify(method));
+    }
+
+    useEffect(() => {
+        const payMethod = localStorage.getItem("_dgBkPM");
+        const parsedPayMethod = payMethod ? JSON.parse(payMethod) : null;
+        if (parsedPayMethod) {
+            if(parsedPayMethod.paymentMethod==="On-groom-pay"){
+                ChangeOngroom(true)
+            }
+        }
+    }, [])
+
+>>>>>>> origin/master
 
     return (
         <div className='flex mt-7 items-center justify-center w-full  md:mb-20'>
