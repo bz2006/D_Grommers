@@ -1,10 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const TimeSchema = new Schema({
+    time: String
+});
 
 const SlotSchema = new Schema({
     day: Number,
-    avsl: Number
+    avsl: Number,
+    time:[TimeSchema]
 });
 
 
@@ -21,6 +25,6 @@ const GroomingSlotsSchema = new Schema({
 });
 
 
-const GroomingSlots = mongoose.model('GroomingSlots', GroomingSlotsSchema);
+const GroomingSlots = mongoose.models.GroomingSlots || mongoose.model('GroomingSlots', GroomingSlotsSchema);
 
 module.exports = GroomingSlots;

@@ -1,25 +1,17 @@
-'use client';
-
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
-type InteractiveDivProps = {
+type NavigatorProps = {
   path: string;
+  styles?:string;
   children: React.ReactNode;
 };
 
-const InteractiveDiv = ({ path, children }: InteractiveDivProps) => {
-  const router = useRouter();
-
-  const handleNavigation = () => {
-    router.push(path);
-  };
-
+const Navigator = ({ path, children,styles }: NavigatorProps) => {
   return (
-    <div onClick={handleNavigation} className='bg-white border rounded-md border-gray-300 h-32 sm:w-auto md:w-15 flex items-center justify-center hover:cursor-pointer'>
+    <a href={path} className={styles}>
       {children}
-    </div>
+    </a>
   );
 };
 
-export default InteractiveDiv;
+export default Navigator;
