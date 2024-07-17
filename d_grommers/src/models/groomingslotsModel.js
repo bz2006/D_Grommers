@@ -7,6 +7,7 @@ const TimeSchema = new Schema({
 
 const SlotSchema = new Schema({
     day: Number,
+    dayname:String,
     avsl: Number,
     time:[TimeSchema]
 });
