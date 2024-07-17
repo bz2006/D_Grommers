@@ -10,6 +10,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Navigator from './DivNav';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
@@ -20,7 +21,7 @@ const navigation = [
 
 type User = {
   email: string;
-  username:string;
+  username: string;
   updatedAt: string;
   _id: string;
 };
@@ -38,8 +39,8 @@ const Header: React.FC = () => {
     try {
       const res = await axios.get('/api/user')
 
-  console.log(res.data["data"]['_id']);
-  
+      console.log(res.data["data"]['_id']);
+
       setUser(res.data["data"])
 
     } catch (error) {
@@ -64,7 +65,7 @@ const Header: React.FC = () => {
     }
 
   }
-console.log();
+  console.log();
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -176,7 +177,7 @@ console.log();
                               href="/my-account/schedules"
                               className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                             >
-                            Schedules
+                              Schedules
                             </a>
                           )}
                         </Menu.Item>
@@ -195,13 +196,13 @@ console.log();
                     ) : (
                       <Menu.Items className="absolute right-0 z-10 mt-2 w-auto origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className='flex p-3'>
-                          <button onClick={() => { router.push('/login') }} className='bg-violet-900 min-w-24 h-11 hover:bg-violet-600 text-white font-bold  rounded'>
+                          <Navigator path='/login' styles='bg-violet-900 min-w-24 h-11 hover:bg-violet-600 text-white font-bold text-center justify-center rounded flex items-center mr-3'>
                             Log In
-                          </button>
+                          </Navigator>
 
-                          <button onClick={() => { router.push('/signup') }} className='bg-violet-900 ml-3 min-w-24 h-11 hover:bg-violet-600 text-white font-bold  rounded'>
+                          <Navigator path='/signup' styles='bg-violet-900 min-w-24 h-11 hover:bg-violet-600 text-white font-bold text-center justify-center rounded flex items-center'>
                             Sign Up
-                          </button>
+                          </Navigator>
                         </div>
                       </Menu.Items>
 

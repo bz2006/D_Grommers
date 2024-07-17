@@ -30,11 +30,14 @@ export async function POST(request: NextRequest) {
                 const daysInMonth = new Date(year, monthDate.getMonth() + 1, 0).getDate();
 
                 const slots = [];
+                const time=[{time:"1"},{time:"2"}]
                 for (let day = 1; day <= daysInMonth; day++) {
-                    slots.push({ day, avsl: defavslt });
+                
+                    slots.push({ day, avsl: defavslt,time:time });
                 }
 
                 monthlySlots.push({ month: monthName, year, slots });
+                
             }
 
             const newGroomingSlot = new GroomingSlots({

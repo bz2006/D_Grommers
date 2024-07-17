@@ -1,9 +1,7 @@
-"use client"
+
 import React from 'react'
-import { useRouter } from 'next/navigation'
 
 type Props = {
-    id:string
     range: string;
     bgColor: string;
     imgSrc: string;
@@ -12,11 +10,10 @@ type Props = {
     price: string;
 }
 
-const BreedsCard: React.FC<Props> = ({id, range, name, price, imgSrc, bgColor, priceColor }) => {
-const router =useRouter()
-
+const BreedsCard: React.FC<Props> = ({ range, name, price, imgSrc, bgColor, priceColor }) => {
+    
     return (
-        <div onClick={()=>{router.push(`/breeds/${id}`)}}  className={`flex-shrink-0 m-6 relative overflow-hidden ${bgColor} hover:cursor-pointer rounded-lg max-w-xs shadow-lg`}>
+        <div className={`flex-shrink-0 m-6 relative overflow-hidden ${bgColor} hover:cursor-pointer rounded-lg max-w-xs shadow-lg`}>
             <svg className="absolute bottom-0 left-0 mb-8" viewBox="0 0 375 283" fill="none" style={{ transform: 'scale(1.5)', opacity: 0.1 }}>
                 <rect x="159.52" y="175" width="152" height="152" rx="8" transform="rotate(-45 159.52 175)" fill="white" />
                 <rect y="107.48" width="152" height="152" rx="8" transform="rotate(-45 0 107.48)" fill="white" />

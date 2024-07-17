@@ -149,12 +149,6 @@ const AddressStep = (props: Props) => {
         GetAddress()
     }, [])
 
-<<<<<<< HEAD
-    const SelectAddress = (id: string) => {
-        setselectedbg({ ...selectedbg, adrsid: id });
-    }
-
-=======
     const SelectAddress = (adrs:Sel,id: string) => {
         setselectedbg({ ...selectedbg, adrsid: id });
         localStorage.setItem("_dgBkADRS", JSON.stringify(adrs));
@@ -172,7 +166,6 @@ const AddressStep = (props: Props) => {
     }, [])
     
 
->>>>>>> origin/master
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -237,11 +230,7 @@ const AddressStep = (props: Props) => {
 
                     {Alladdress?.length > 0 && Alladdress.map((adrs) => (
                         <div key={adrs._id} className={`flex ${selectedbg.adrsid == adrs._id ? 'bg-violet-400 font-white' : 'bg-red-400 text-black'} p-5 md:w-100 justify-between sm:w-full hover:cursor-pointer rounded-sm`}
-<<<<<<< HEAD
-                            onClick={() => SelectAddress(adrs._id)}>
-=======
                             onClick={() => SelectAddress(adrs,adrs._id)}>
->>>>>>> origin/master
                             <div className='mr-12 ' >
                                 <p>{adrs.name}<br />{adrs.address}<br />{adrs.phone}</p>
                             </div>
