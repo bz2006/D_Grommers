@@ -12,11 +12,13 @@ type Loc = {
 };
 
 type GroomingSlot = {
+  _id: string;
   district: string;
   monthlyslots: MonthlySlot[];
 };
 
 type MonthlySlot = {
+  _id: string;
   month: string;
   year: number;
   slots: Slot[];
@@ -31,14 +33,17 @@ type Slot = {
 };
 
 type Time = {
+  _id: string;
   time: string;
+  available: boolean;
 };
 
 const Slots = (props: Props) => {
 
   const [locations, setLocations] = useState<Loc[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<GroomingSlot | null>(null);
-  const [selectedSlot, setselectedSlot] = useState<Slot | null>(null);
+  const [selectedSlot, setselectedSlot] = useState<MonthlySlot | null>(null);
+  // const [selectedMid, setselectedMid] = useState<Slot | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = (slot: any) => {
@@ -49,8 +54,16 @@ const Slots = (props: Props) => {
 
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setIsModalOpen(false);
+    try {
+
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/update-slots`,
+        { locid: selectedLocation?._id, slotid: selectedSlot?._id, NewSlots: selectedSlot })
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {
@@ -62,6 +75,7 @@ const Slots = (props: Props) => {
     try {
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/get-locations`);
       setLocations(res.data.data.map((loc: { _id: string; district: string }) => ({ value: loc._id, label: loc.district })));
+      console.log(res.data.data)
     } catch (error) {
       console.error('Error fetching locations:', error);
     }
@@ -79,6 +93,35 @@ const Slots = (props: Props) => {
     }
   };
 
+  const SelectNew = (id: string, value: boolean) => {
+    setselectedSlot(prevSlot => {
+      if (!prevSlot) return prevSlot; // Ensure we have a slot selected
+
+      // Create a new slot object with updated time array
+      const updatedTime = prevSlot.time.map(slot =>
+        slot._id === id ? { ...slot, available: value } : slot
+      );
+
+      // Return new state with updated time array
+      return { ...prevSlot, time: updatedTime };
+    });
+
+  }
+
+  const DeleteTS = (id: string) => {
+    setselectedSlot(prevSlot => {
+      if (!prevSlot) return prevSlot; // Ensure we have a slot selected
+
+      // Filter out the slot with the matching id
+      const updatedTime = prevSlot.time.filter(slot => slot._id !== id);
+
+      // Return new state with updated time array
+      return { ...prevSlot, time: updatedTime };
+    });
+  };
+
+  console.log(selectedSlot)
+  console.log(selectedLocation)
 
   useEffect(() => {
     fetchLocations();
@@ -190,15 +233,23 @@ const Slots = (props: Props) => {
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-5 p-5'>
             {selectedSlot?.time.map((t, index) => (
               <div
-                className='p-2 items-center justify-center flex min-w-10 border rounded-md border-black hover:cursor-pointer'
-                key={index}>
+                onClick={() => { SelectNew(t._id, t.available === true ? false : true) }}
+                className={`${t.available === true ? "bg-violet-600 text-white" : "bg-white"} p-2 items-center justify-center flex min-w-10 border rounded-md border-black hover:cursor-pointer relative`}
+                key={t._id}
+              >
+                <span
+                  className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 px-1 bg-red-500 text-white rounded-full hover:bg-red-700 cursor-pointer text-xs"
+                  onClick={() => DeleteTS(t._id)}
+                >
+                  &times;
+                </span>
                 {t.time}
               </div>
             ))}
             <div
-                className='p-2 items-center justify-center flex min-w-10 border border-dashed rounded-md border-black hover:cursor-pointer'>
-                +
-              </div>
+              className='p-2 items-center justify-center flex min-w-10 border border-dashed rounded-md border-black hover:cursor-pointer'>
+              +
+            </div>
           </div>
         </div>
       </Modal>

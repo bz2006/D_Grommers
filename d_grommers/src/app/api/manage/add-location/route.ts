@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
                 const daysInMonth = new Date(year, monthDate.getMonth() + 1, 0).getDate();
             
                 const slots = [];
-                const time = [{ time: "1" }, { time: "2" }];
+                const time = [{ time: "10:30 AM" }, { time: "02:00 PM" },{ time: "04:30 PM" }];
                 
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = new Date(year, monthDate.getMonth(), day);

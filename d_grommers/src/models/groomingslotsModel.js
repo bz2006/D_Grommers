@@ -2,13 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const TimeSchema = new Schema({
-    time: String
+    time: String,
+    available: {
+        type: Boolean,
+        default: true
+    }
 });
 
 const SlotSchema = new Schema({
     day: Number,
     dayname:String,
-    avsl: Number,
+    available: {
+        type: Boolean,
+        default: true
+    },
     time:[TimeSchema]
 });
 
