@@ -2,33 +2,29 @@ import { ConnectDB } from "@/config/dbconfig";
 import { NextRequest, NextResponse } from "next/server";
 import GroomingSlots from "@/models/groomingslotsModel";
 
-
-
 ConnectDB()
+
 
 export async function PUT(request: NextRequest) {
 
-    const reqBody = await request.json()
-    const { locid, slotid, NewSlots } = reqBody;
-    console.log(locid, slotid, NewSlots);
-
+    const reqBody = await request.json();
+    const { locid, slotid, NewSlots,selectedMid } = reqBody;
 
     try {
-
         // Find the document by location id
-        const groomingSlots = await GroomingSlots.findById( locid );
+        const groomingSlots = await GroomingSlots.findById(locid);
 
         if (groomingSlots) {
+            console.log("monthly", groomingSlots);
+            // Use the correct method to find the monthly slot
+            const monthlySlot = groomingSlots.monthlyslots.find((slot: { _id: { toString: () => string; }; }) => slot._id.toString() === selectedMid);
 
-            const monthlySlot = groomingSlots.monthlyslots.findById(locid);
-            console.log("monthllyy", groomingSlots);
             if (monthlySlot) {
-
-
+                console.log("monthlySlot", monthlySlot);
                 const slot = monthlySlot.slots.id(slotid);
 
                 if (slot) {
-                    console.log("sloooot", slot)
+                    console.log("slot", slot);
                     Object.assign(slot, NewSlots);
 
                     // Save the updated document
@@ -37,39 +33,30 @@ export async function PUT(request: NextRequest) {
                     return NextResponse.json({
                         message: 'Updated slot',
                         status: 200,
-                    })
-
+                    });
                 } else {
                     return NextResponse.json({
-                        message: 'slot not found',
+                        message: 'Slot not found',
                         status: 404,
-                    })
+                    });
                 }
-
             } else {
                 return NextResponse.json({
                     message: 'Monthly slot not found',
                     status: 404,
-                })
+                });
             }
-
-
         } else {
             return NextResponse.json({
                 message: 'Grooming slots not found',
                 status: 404,
-            })
+            });
         }
-
-        // Find the MonthlySlotSchema entry to update
-
-
-
     } catch (error) {
         console.error(error);
         return NextResponse.json({
             message: 'Internal Server Error',
             status: 500,
-        })
+        });
     }
 }

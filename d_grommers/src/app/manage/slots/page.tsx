@@ -18,6 +18,7 @@ type GroomingSlot = {
 };
 
 type MonthlySlot = {
+  time: any;
   _id: string;
   month: string;
   year: number;
@@ -43,24 +44,24 @@ const Slots = (props: Props) => {
   const [locations, setLocations] = useState<Loc[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<GroomingSlot | null>(null);
   const [selectedSlot, setselectedSlot] = useState<MonthlySlot | null>(null);
-  // const [selectedMid, setselectedMid] = useState<Slot | null>(null);
+  const [selectedMid, setSelectedMonthid] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = (slot: any) => {
+  const showModal = (slot: any, monthId: string) => {
     setIsModalOpen(true);
     console.log(slot);
-
+    setSelectedMonthid(monthId)
     setselectedSlot(slot);
 
   };
+console.log(selectedMid);
 
   const handleOk = async () => {
     setIsModalOpen(false);
     try {
-
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/update-slots`,
-        { locid: selectedLocation?._id, slotid: selectedSlot?._id, NewSlots: selectedSlot })
-
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/update-slots/time`,
+        { locid: selectedLocation?._id,selectedMid:selectedMid, slotid: selectedSlot?._id, NewSlots: selectedSlot })
+        GetSingleLoc()
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +99,7 @@ const Slots = (props: Props) => {
       if (!prevSlot) return prevSlot; // Ensure we have a slot selected
 
       // Create a new slot object with updated time array
-      const updatedTime = prevSlot.time.map(slot =>
+      const updatedTime = prevSlot.time.map((slot: { _id: string; }) =>
         slot._id === id ? { ...slot, available: value } : slot
       );
 
@@ -113,7 +114,7 @@ const Slots = (props: Props) => {
       if (!prevSlot) return prevSlot; // Ensure we have a slot selected
 
       // Filter out the slot with the matching id
-      const updatedTime = prevSlot.time.filter(slot => slot._id !== id);
+      const updatedTime = prevSlot.time.filter((slot: { _id: string; }) => slot._id !== id);
 
       // Return new state with updated time array
       return { ...prevSlot, time: updatedTime };
@@ -121,7 +122,7 @@ const Slots = (props: Props) => {
   };
 
   console.log(selectedSlot)
-  console.log(selectedLocation)
+  console.log(selectedLocation?.monthlyslots)
 
   useEffect(() => {
     fetchLocations();
@@ -135,7 +136,7 @@ const Slots = (props: Props) => {
         <h2 className='text-xl pb-3'>{monthlySlot.month} {monthlySlot.year}</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-x-1 gap-y-5'>
           {monthlySlot.slots?.map((slot, slotIndex) => (
-            <div key={slotIndex} onClick={() => { showModal(slot) }} className='flex flex-col p-5 bg-black w-40 items-center justify-center rounded-md text-white hover:cursor-pointer'>
+            <div key={slotIndex} onClick={() => { showModal(slot, monthlySlot._id) }} className='flex flex-col p-5 bg-black w-40 items-center justify-center rounded-md text-white hover:cursor-pointer'>
               <h1>{slot.dayname}, {slot.day}</h1>
               <h1>{slot.avsl} Slots</h1>
               {/* <div>
@@ -231,7 +232,7 @@ const Slots = (props: Props) => {
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-5 p-5'>
-            {selectedSlot?.time.map((t, index) => (
+            {selectedSlot?.time.map((t: { _id: string, available: boolean; time: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
               <div
                 onClick={() => { SelectNew(t._id, t.available === true ? false : true) }}
                 className={`${t.available === true ? "bg-violet-600 text-white" : "bg-white"} p-2 items-center justify-center flex min-w-10 border rounded-md border-black hover:cursor-pointer relative`}
