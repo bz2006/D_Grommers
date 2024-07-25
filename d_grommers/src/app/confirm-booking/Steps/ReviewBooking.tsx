@@ -49,18 +49,10 @@ const ReviewBooking = ({ setCurrentStep }: Props) => {
 
         const data = localStorage.getItem("_dgBkDT");
         const slot = data ? JSON.parse(data) : null;
-        console.log(slot.time);
 
-        const monthNames = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-
-        // Month is 0-indexed in JavaScript's Date object, so we need to adjust by subtracting 1
-        const date = new Date(slot.date["year"], slot.date["month"] - 1, slot.date["dayNumber"]);
-
-        const formattedDate = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-        setSch(`${formattedDate} ${slot.time}`)
+        const date = slot.date
+        const formattedDate = `${date.month}, ${date.dayNumber} ${date.year}`
+        setSch(`${formattedDate} ${slot?.time}`)
     }
 
     const GetPayM = () => {
@@ -71,7 +63,7 @@ const ReviewBooking = ({ setCurrentStep }: Props) => {
 
     const GetPKG = () => {
         //packageName
-        const data = localStorage.getItem("_dgBkDet");
+        const data = localStorage.getItem("_dgBkPKG");
         const pkg = data ? JSON.parse(data) : null;
         setPKG([{
             charge: pkg.charge,

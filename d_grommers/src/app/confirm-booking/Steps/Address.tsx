@@ -1,6 +1,6 @@
 
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { Button, Modal, Input, message } from 'antd';
+import { Button, Modal, Input, message,Select } from 'antd';
 import axios from 'axios';
 
 type Props = {}
@@ -36,6 +36,10 @@ type Sel = {
     phone: string;
 }
 
+type Loc = {
+    value: string;
+    label: string;
+  };
 
 type bg = {
     adrsid: string;
@@ -48,8 +52,9 @@ const AddressStep = (props: Props) => {
     });
     const [iseditModalOpen, setiseditModalOpen] = useState(false);
     const [Alladdress, setallAdrs] = useState<Address[]>([])
+    const [locations, setLocations] = useState<Loc[]>([]);
     const [selectedaddress, setSelectedadrs] = useState<Sel[]>([{
-        _id:"",
+        _id: "",
         name: "",
         address: "",
         city: "",
@@ -115,7 +120,7 @@ const AddressStep = (props: Props) => {
     const UpdateInit = (adrs: any) => {
         console.log(adrs);
         setSelectedadrs([{
-            _id:adrs._id,
+            _id: adrs._id,
             name: adrs.name || "",
             address: adrs.address || "",
             city: adrs.city || "",
@@ -125,7 +130,7 @@ const AddressStep = (props: Props) => {
             phone: adrs.phone || ""
         }]);
     }
-    
+
     const UpdateAddress = async () => {
 
         try {
@@ -143,16 +148,25 @@ const AddressStep = (props: Props) => {
 
         }
     }
-    
+
+    const fetchLocations = async () => {
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/get-locations`);
+            setLocations(res.data.data.map((loc: { _id: string; district: string }) => ({ value: loc._id, label: loc.district })));
+            console.log(res.data.data)
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        }
+    };
 
     useEffect(() => {
         GetAddress()
     }, [])
 
-    const SelectAddress = (adrs:Sel,id: string) => {
+    const SelectAddress = (adrs: Sel, id: string) => {
         setselectedbg({ ...selectedbg, adrsid: id });
         localStorage.setItem("_dgBkADRS", JSON.stringify(adrs));
-        
+
     }
 
     useEffect(() => {
@@ -160,11 +174,11 @@ const AddressStep = (props: Props) => {
         const address = adrs ? JSON.parse(adrs) : null;
         if (address) {
             setselectedbg({
-                adrsid:  address._id
+                adrsid: address._id
             })
         }
     }, [])
-    
+
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -180,9 +194,16 @@ const AddressStep = (props: Props) => {
         setSelectedadrs(prevState => prevState.map((address, index) => index === 0 ? { ...address, [name]: value } : address));
     };
 
-    
+    const handleSelectChange = (value: string, option: any) => {
+        setSelectedadrs(prevState =>
+          prevState.map((address, index) =>
+            index === 0 ? { ...address, city: option.label } : address
+          )
+        );
+      };
 
     const showModal = () => {
+        fetchLocations()
         setIsModalOpen(true);
     };
 
@@ -217,6 +238,7 @@ const AddressStep = (props: Props) => {
         });
     };
 
+
     return (
         <div>
             <div className='flex  w-full items-center justify-evenly'>
@@ -230,7 +252,7 @@ const AddressStep = (props: Props) => {
 
                     {Alladdress?.length > 0 && Alladdress.map((adrs) => (
                         <div key={adrs._id} className={`flex ${selectedbg.adrsid == adrs._id ? 'bg-violet-400 font-white' : 'bg-red-400 text-black'} p-5 md:w-100 justify-between sm:w-full hover:cursor-pointer rounded-sm`}
-                            onClick={() => SelectAddress(adrs,adrs._id)}>
+                            onClick={() => SelectAddress(adrs, adrs._id)}>
                             <div className='mr-12 ' >
                                 <p>{adrs.name}<br />{adrs.address}<br />{adrs.phone}</p>
                             </div>
@@ -253,7 +275,34 @@ const AddressStep = (props: Props) => {
                 <Input placeholder="Address" maxLength={25} name='address' value={NewAddress.address} onChange={handleChange} size='large' className='mb-5' />
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-                    <Input placeholder="City" name='city' value={NewAddress.city} onChange={handleChange} size='large' />
+                    <Select
+                        showSearch
+                        style={{ width: 200 }}
+                        size="large"
+                        
+                        placeholder="City / District"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            typeof option?.label === 'string' && option.label.toLowerCase().includes(input.toLowerCase())
+                        }
+                        filterSort={(optionA, optionB) =>
+                            typeof optionA?.label === 'string' && typeof optionB?.label === 'string'
+                                ? optionA.label.toLowerCase().localeCompare(optionB.label.toLowerCase())
+                                : 0
+                        }
+                        onChange={(value, option: any) => {
+                            setNewAddresss(prevFormData => ({
+                                ...prevFormData,
+                                location: option.label
+                            }));
+                        }}
+                    >
+                        {locations.map((loc) => (
+                            <Select.Option key={loc.value} value={loc.value} label={loc.label}>
+                                {loc.label}
+                            </Select.Option>
+                        ))}
+                    </Select>
                     <Input placeholder="State" name='state' value={NewAddress.state} onChange={handleChange} size='large' />
                     <Input placeholder="Country" name='country' value={NewAddress.country} onChange={handleChange} size='large' />
                     <Input placeholder="Pincode" name='pin' value={NewAddress.pin} onChange={handleChange} size='large' />
@@ -264,16 +313,39 @@ const AddressStep = (props: Props) => {
             {/* Edit Address */}
 
             <Modal title="Edit Address" open={iseditModalOpen} onOk={handleeditOk} onCancel={handleeditCancel}>
-                        <Input placeholder="Name" size='large' name='name' value={selectedaddress[0]?.name}  onChange={handleUpdateChange} className='mb-5' />
-                        <Input placeholder="Address" size='large' name='address' value={selectedaddress[0]?.address}  onChange={handleUpdateChange} className='mb-5' />
+                <Input placeholder="Name" size='large' name='name' value={selectedaddress[0]?.name} onChange={handleUpdateChange} className='mb-5' />
+                <Input placeholder="Address" size='large' name='address' value={selectedaddress[0]?.address} onChange={handleUpdateChange} className='mb-5' />
 
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-                            <Input placeholder="City" size='large' name='city' value={selectedaddress[0]?.city}  onChange={handleUpdateChange} />
-                            <Input placeholder="State" size='large' name='state' value={selectedaddress[0]?.state}  onChange={handleUpdateChange} />
-                            <Input placeholder="Country" size='large' name='country' value={selectedaddress[0]?.country}  onChange={handleUpdateChange} />
-                            <Input placeholder="Pincode" size='large' name='pin' value={selectedaddress[0]?.pin}  onChange={handleUpdateChange} />
-                            <Input placeholder="Phone Number " size='large' name='phone' value={selectedaddress[0]?.phone}   onChange={handleUpdateChange} />
-                        </div>
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+                <Select
+                        showSearch
+                        style={{ width: 200 }}
+                        size="large"
+                        value={selectedaddress[0]?.city}
+                        placeholder="City / District"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            typeof option?.label === 'string' && option.label.toLowerCase().includes(input.toLowerCase())
+                        }
+                        filterSort={(optionA, optionB) =>
+                            typeof optionA?.label === 'string' && typeof optionB?.label === 'string'
+                                ? optionA.label.toLowerCase().localeCompare(optionB.label.toLowerCase())
+                                : 0
+                        }
+                        onChange={handleSelectChange}
+                    >
+                        {locations.map((loc) => (
+                            <Select.Option key={loc.value} value={loc.value} label={loc.label}>
+                                {loc.label}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                    {/* <Input placeholder="City" size='large' name='city' value={selectedaddress[0]?.city} onChange={handleUpdateChange} /> */}
+                    <Input placeholder="State" size='large' name='state' value={selectedaddress[0]?.state} onChange={handleUpdateChange} />
+                    <Input placeholder="Country" size='large' name='country' value={selectedaddress[0]?.country} onChange={handleUpdateChange} />
+                    <Input placeholder="Pincode" size='large' name='pin' value={selectedaddress[0]?.pin} onChange={handleUpdateChange} />
+                    <Input placeholder="Phone Number " size='large' name='phone' value={selectedaddress[0]?.phone} onChange={handleUpdateChange} />
+                </div>
 
             </Modal >
 

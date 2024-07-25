@@ -4,28 +4,66 @@ import { DatePicker, message, Space } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { format } from 'date-fns';
 import "./Hidescroll.css"
+import axios from 'axios';
 
 type Props = {}
 
 type dateprop = {
     dayNumber: number,
     dayName: string,
-    month: number,
+    month: string,
     year: number
 }
 
+type monthprop = {
+    month: string,
+    year: number
+}
+
+type GroomingSlot = {
+    _id: string;
+    district: string;
+    monthlyslots: MonthlySlot[];
+};
+type MonthlySlot = {
+    time?: any;
+    _id: string;
+    dayname?: string;
+    day?: number;
+    month?: string;
+    available?: boolean;
+    year?: number;
+    slots?: Slot[];
+};
+type Slot = {
+    _id: string;
+    day: number;
+    dayname: string;
+    available: boolean;
+    time: Time[];
+};
+
+type Time = {
+    _id: string;
+    time: string;
+    available: boolean;
+};
+
 const TimeSlotSteps = (props: Props) => {
 
-    const [Days, setDays] = useState<{ dayNumber: number, dayName: string, month: number, year: number }[]>([])
+    const [AllMonths, setAllMonths] = useState<GroomingSlot | null>(null);
+    const [SelectedMonth, setSelectedMonth] = useState<Slot[] | null>(null);
+    const [SelectedMonthDet, setSelectedMonthDet] = useState<monthprop>({
+        month: "",
+        year: 0
+    })
     const [date, setdate] = useState<dateprop>({
         dayNumber: 0,
         dayName: "",
-        month: 0,
+        month: "0",
         year: 0
     })
-    const [slots, setslots] = useState([
-        '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM'
-    ])
+    const [slots, setslots] = useState<Time[] | null>(null);
     const [time, setTime] = useState("")
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -47,10 +85,34 @@ const TimeSlotSteps = (props: Props) => {
         }
     };
 
+
+    const GetAddress = () => {
+        const adrs = localStorage.getItem("_dgBkADRS");
+        const address = adrs ? JSON.parse(adrs) : null;
+        return address.city
+
+    }
+
+    const GetSingleLoc = async (loc?: string) => {
+        try {
+            let location = loc
+
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/manage/get-singlelocation/${location}`);
+            setAllMonths(res.data.data);
+            console.log(res.data.data)
+
+
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        }
+    };
+
     useEffect(() => {
+        const loc = GetAddress()
+        GetSingleLoc(loc)
         const data = localStorage.getItem("_dgBkDT");
         const slot = data ? JSON.parse(data) : null;
-        if(slot){
+        if (slot) {
             setTime(slot.time)
             setdate({
                 dayName: date["dayName"],
@@ -60,34 +122,32 @@ const TimeSlotSteps = (props: Props) => {
             })
         }
     }, [])
-    
+
 
     const onChangeDate = (dateString: any) => {
-
         if (dateString) {
-            const month = dateString.$d.getMonth();
-            const year = dateString.$d.getFullYear();
-            setDays(getAllDaysInMonth(month, year))
+            const date = new Date(dateString.$d);
+            const monthName = date.toLocaleString('default', { month: 'long' });
+            const year = date.getFullYear();
+            console.log(monthName, year);
+            const result = AllMonths?.monthlyslots.find(
+                slot => slot.month === monthName && slot.year === year
+            );
+            console.log(result?.slots)
+            setSelectedMonthDet({
+                month: monthName,
+                year: year
+            })
+            setSelectedMonth(result?.slots || null)
+
+
+            // setDays()
         }
     }
-    const getAllDaysInMonth = (month: number, year: number): { dayNumber: number, dayName: string, month: number, year: number }[] => {
-        const date = new Date(year, month, 1);
-        const days = [];
-        while (date.getMonth() === month) {
-            const formattedDayName = format(new Date(date), 'EEEE').slice(0, 3); // Extract first three characters
-            days.push({
-                dayNumber: date.getDate(),
-                dayName: formattedDayName,
-                month: month + 1, // Add 1 to make the month 1-indexed (e.g., 7 for July)
-                year: date.getFullYear()
-            });
-            date.setDate(date.getDate() + 1);
-        }
-        return days;
-    };
 
-    const Selectdate = (dayName: string, dayNumber: number, month: number, year: number) => {
+    const Selectdate = (dayName: string, dayNumber: number, month: string, year: number, time: any) => {
 
+        setslots(time);
 
         setdate({
             dayName: dayName,
@@ -112,12 +172,12 @@ const TimeSlotSteps = (props: Props) => {
 
     const disabledDate = (current: Dayjs | undefined): boolean => {
         return !!current && current.isBefore(dayjs(), 'day');
-      };
+    };
 
     return (
         <div>
             <div className='p-2 flex justify-between'>
-                <DatePicker picker="month" size='large'disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
+                <DatePicker picker="month" size='large' disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
                 <div className='flex pr-2'>
                     <button
                         className='hidden md:block bg-white px-3 mr-2 font-bold text-black rounded-md'
@@ -132,17 +192,23 @@ const TimeSlotSteps = (props: Props) => {
 
 
             <div className='flex space-x-4 p-2 overflow-x-scroll w-[300px] md:w-[600px] CBhide-scrollbar' ref={scrollRef}>
-                {Days.map((day, index) => (
-                    <div
-                        onClick={() => { Selectdate(day.dayName, day.dayNumber, day.month, day.year) }}
-                        key={index}
-                        className='flex hover:cursor-pointer bg-slate-50 min-w-24 max-w-24 h-32 rounded-md items-center justify-center flex-col shrink-0'
-                    >
-                        <h1 className='text-black text-xl'>{day.dayName}</h1>
-                        <h1 className='text-black text-2xl m-3 font-bold'>{day.dayNumber}</h1>
-                        <h1 className='text-black text-sm'>Slot</h1>
-                    </div>
-                ))}
+                {SelectedMonth?.map((day, index) => {
+                    const availableTimeCount = day.time?.filter(time => time.available).length;
+                    return (
+                        <div
+                            onClick={() => { Selectdate(day.dayname, day.day, SelectedMonthDet?.month, SelectedMonthDet?.year, day.time) }}
+                            key={index}
+                            className='flex hover:cursor-pointer bg-slate-50 min-w-24 max-w-24 h-32 rounded-md items-center justify-center flex-col shrink-0'
+                        >
+                            <h1 className='text-black text-xl'>{day.dayname.slice(0, 3)}</h1>
+                            <h1 className='text-black text-2xl m-3 font-bold'>{day.day}</h1>
+                            <div className='flex flex-row justify-center items-center'>
+                                <h1 className={`${availableTimeCount <= 2 ? "text-red-700" : "text-green-700"}  text-md font-extrabold flex mr-2`}>O</h1>
+                                <h1 className='text-black'>{availableTimeCount} Slots</h1>
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
 
 
@@ -153,12 +219,18 @@ const TimeSlotSteps = (props: Props) => {
                     <h2>Available Time Slots</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 p-2">
-                    {slots.length > 0 && slots.map((t) => (
-                        <div onClick={() => SelectTime(t)} className='flex hover:cursor-pointer bg-slate-50 w-36 h-12 rounded-md items-center justify-center flex-col'>
-                            <h1 className='text-black text-xl'>{t}</h1>
+
+                    {slots?.map((t) => (
+                        <div
+                            key={t._id} 
+                            onClick={() => t.available && SelectTime(t.time)}
+                            className={`flex items-center text-black justify-center w-36 h-12 rounded-md flex-col ${t.available ? `hover:cursor-pointer ${time === t.time ? "bg-violet-600 text-white" : "bg-white"}` : "hover:cursor-not-allowed bg-gray-200"}`}
+                        >
+                            <h1 className={` text-xl ${!t.available ? "text-gray-500" : ""}`}>
+                                {t.time}
+                            </h1>
                         </div>
                     ))}
-
                 </div>
             </div>
         </div>

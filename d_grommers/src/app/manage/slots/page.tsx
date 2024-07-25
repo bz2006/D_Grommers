@@ -140,9 +140,9 @@ const Slots = (props: Props) => {
 
 
 
-  const AddTime = (time:any, timeString: any) => {
+  const AddTime = (time: any, timeString: any) => {
     console.log(time, timeString);
-    
+
     if (timeString) {
       // @ts-ignore
       setselectedSlot({
@@ -153,6 +153,7 @@ const Slots = (props: Props) => {
 
 
   }
+
 
   console.log(selectedSlot)
   console.log(selectedLocation)
@@ -168,17 +169,18 @@ const Slots = (props: Props) => {
       <div key={index} >
         <h2 className='text-xl pb-3'>{monthlySlot.month} {monthlySlot.year}</h2>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-x-1 gap-y-5'>
-          {monthlySlot.slots?.map((slot, slotIndex) => (
-            <div key={slotIndex} onClick={() => { showModal(slot, monthlySlot._id) }} className='flex flex-col p-5 bg-black w-40 items-center justify-center rounded-md text-white hover:cursor-pointer'>
-              <h1>{slot.dayname}, {slot.day}</h1>
-              {/* <h1>{slot.avsl} Slots</h1> */}
-              {/* <div>
-                {slot.time?.map((time, timeIndex) => (
-                  <p key={timeIndex}>Time: {time.time}</p>
-                ))}
-              </div> */}
-            </div>
-          ))}
+          {monthlySlot.slots?.map((slot, slotIndex) => {
+            const availableTimeCount = slot.time?.filter(time => time.available).length;
+            return (
+              <div key={slotIndex} onClick={() => { showModal(slot, monthlySlot._id) }} className='flex flex-col p-5 bg-black w-40 items-center justify-center rounded-md text-white hover:cursor-pointer'>
+                <h1>{slot.dayname}, {slot.day}</h1>
+                <div className='flex flex-row justify-center items-center mt-2'>
+                  <h1 className={`${availableTimeCount <= 2 ? "text-red-700" : "text-green-700"} text-md font-extrabold flex mr-2`}>O</h1>
+                  <h1>{availableTimeCount} Slots</h1>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     ),
