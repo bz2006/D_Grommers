@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {}
 
-const StepHandler: React.FC = () => {
+const BookingHandler = () => {
 
     
     return (
@@ -10,4 +10,4 @@ const StepHandler: React.FC = () => {
     )
 }
 
-export default StepHandler
+export default BookingHandler

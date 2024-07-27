@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 type Props = {
     setCurrentStep: (step: number) => void;
+    placeBooking: () => void;
 }
 
 type Adrs = {
@@ -18,7 +19,7 @@ type PKGprop = [{
     _id: string;
 }]
 
-const ReviewBooking = ({ setCurrentStep }: Props) => {
+const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
 
     const [PaymentMethod, setPaymentMethod] = useState()
     const [PKG, setPKG] = useState<PKGprop>([{
@@ -145,14 +146,14 @@ const ReviewBooking = ({ setCurrentStep }: Props) => {
 
 
                 <div className='hidden md:flex mt-5 items-center justify-between'>
-                    <button className='bg-green-500 text-blue-800 p-3 md:w-[350px] rounded-md hover:bg-green-300'>
-                        Button
+                    <button onClick={placeBooking} className='bg-green-500 text-white p-3 md:w-[350px] rounded-md hover:bg-green-300'>
+                        Place booking
                     </button>
                 </div>
 
                 <div className='sm:flex md:hidden fixed bottom-0 left-0 w-full bg-blue-800 justify-center items-center p-4'>
                     <button className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto h-12 hover:bg-gray-100'>
-                        Button
+                    Place booking
                     </button>
                 </div>
 

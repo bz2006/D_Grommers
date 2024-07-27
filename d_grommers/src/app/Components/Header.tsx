@@ -33,7 +33,7 @@ const Header: React.FC = () => {
 
 
   const router = useRouter()
-  const [user, setUser] = useState<User[] | null>(null)
+  const [user, setUser] = useState<User | null>(null)
 
   const GetUser = async () => {
     try {

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Radio } from 'antd';
 import ConfirmHeader from '../Components/ConfirmHeader'
 import BookingProgress from '../Components/BookingProgress'
+import axios from "axios"
 import AddressStep from './Steps/Address'
 import TimeSlotSteps from './Steps/TimeSlot'
 import PaymentMStep from './Steps/PaymentMethod'
@@ -13,12 +14,72 @@ type Props = {}
 const ConfirmBooking = (props: Props) => {
 
   const [CurrentStep, setCurrentStep] = useState(0)
- 
+
+  const placeBooking = async () => {
+
+    try {
+
+      const userid = await GetUser()
+      const Booking = GetBookingDet()
+
+      const BKplace = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/new-booking`, {
+        userid: userid,
+        bookingpackage: Booking.bookingPKG,
+        bookingadrs: Booking.bookingadrs,
+        bookingpaymethod: Booking.bookingpayMethod,
+        bookingslot: Booking.bookingslot
+      })
+      console.log(BKplace);
+
+      // if (BKplace) {
+      //   localStorage.removeItem("_dgBkPKG");
+      //   localStorage.removeItem("_dgBkPM");
+      //   localStorage.removeItem("_dgBkDT");
+      //   localStorage.removeItem("_dgBkADRS");
+      // }
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  const GetBookingDet = () => {
+    const PKG = localStorage.getItem("_dgBkPKG");
+    const bookingPKG = PKG ? JSON.parse(PKG) : null;
+
+    const payMethod = localStorage.getItem("_dgBkPM");
+    const bookingpayMethod = payMethod ? JSON.parse(payMethod) : null;
+
+    const slot = localStorage.getItem("_dgBkDT");
+    const bookingslot = slot ? JSON.parse(slot) : null;
+
+    const adrs = localStorage.getItem("_dgBkADRS");
+    const bookingadrs = adrs ? JSON.parse(adrs) : null;
+
+    return { bookingPKG, bookingpayMethod, bookingslot, bookingadrs };
+
+  }
+
+  const GetUser = async () => {
+    try {
+      const res = await axios.get('/api/user')
+      if (res) {
+        return res.data["data"]['_id']
+      }
+
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
   const Steps = [
     <AddressStep />,
     <TimeSlotSteps />,
     <PaymentMStep />,
-    <ReviewBooking setCurrentStep={setCurrentStep} />
+    <ReviewBooking setCurrentStep={setCurrentStep} placeBooking={placeBooking} />
   ]
 
 

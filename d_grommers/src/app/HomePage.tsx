@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import OrderSection from "./Components/OrderSection";
 
 
 export default function HomePage() {

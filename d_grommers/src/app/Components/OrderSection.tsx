@@ -1,25 +1,55 @@
+
 import React from 'react';
-import './OrderDetails.css'; 
+import './OrderDetails.css';
 
-// Add Type safety
+type Props = {
 
-const OrderSection=() => {
+    Gpackage: GroomingPackage
+    slot: Slot
+    status: string;
+    bookingdate:string;
+}
+
+type GroomingPackage = {
+    pid: string;
+    packageName: string;
+    packageDesc: string;
+    services: string[];
+    charge: number;
+};
+
+type Slot = {
+    time: string;
+    date: Sdate
+}
+
+type Sdate = {
+    dayName: string;
+    dayNumber: number;
+    month: string;
+    year: string;
+}
+
+const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) => {
+    const { dayName, dayNumber, month, year } = slot.date;
+    const scheduledDate = `${month} ${dayNumber}, ${year}`;
+
     return (
-        <div className=" afm aft agb alt bbt cem cex">
+        <div className=" afm aft agb alt bbt cem cex rounded-lg md:w-9/12 ">
             <h3 className="t">Order placed on <time dateTime="2020-12-22">Dec 22, 2020</time></h3>
             <div className="lx zg afm agb aqz byw cby cdc cft">
                 <dl className="mb ut yp aap awg bvi cbx cti">
                     <div>
-                        <dt className="awk ayb">Booking number</dt>
-                        <dd className="ku axx">AT48441546</dd>
+                        <dt className="awk ayb">Grooming On</dt>
+                        <dd className="ku axx">{scheduledDate}</dd>
                     </div>
                     <div className="md byq">
-                        <dt className="awk ayb">Date Booked</dt>
-                        <dd className="ku axx"><time dateTime="2020-12-22">Dec 22, 2020</time></dd>
+                        <dt className="awk ayb">Scheduled Date</dt>
+                        <dd className="ku axx"><time dateTime="2020-12-22">{bookingdate}</time></dd>
                     </div>
                     <div>
                         <dt className="awk ayb">Total amount</dt>
-                        <dd className="ku awk ayb">$40.00</dd>
+                        <dd className="ku awk ayb">₹40.00</dd>
                     </div>
                 </dl>
                 <div className="ab lx zk cwo" data-headlessui-state="">
@@ -53,12 +83,8 @@ const OrderSection=() => {
                 </div>
                 <div className="md cti cwk das dav dbw">
                     <a href="#" className="lx zg zl aeb afg agc alt ark asb awg awk axz bbt bik bnc bnh bnt boj">
-                        <span>View Order</span>
+                        <span>View Schedule</span>
                         <span className="t">AT48441546</span>
-                    </a>
-                    <a href="#" className="lx zg zl aeb afg agc alt ark asb awg awk axz bbt bik bnc bnh bnt boj">
-                        <span>View Invoice</span>
-                        <span className="t">for order AT48441546</span>
                     </a>
                 </div>
             </div>
@@ -74,14 +100,20 @@ const OrderSection=() => {
                             />
                         </div>
                         <div className="jz ut awg">
-                            <div className="awk ayb byt ccr">
-                                <h5>Double Stack Clothing Bag</h5>
-                                <p className="lb bxx">$40.00</p>
+                            <div className="awk ayb byt ccr md:text-xl">
+                                <h5>Bingo, Golden Retriver</h5>
+                                <p className="lb bxx flex  sm:hidden">
+                                    {Gpackage?.packageName}<br />
+                                    {scheduledDate}, {slot.time}
+                                </p>
                             </div>
-                            <p className="md axx byd byq">
-                                Save space and protect your favorite clothes in this double-layer garment bag. Each
-                                compartment easily holds multiple pairs of jeans or tops, while keeping your items neatly
-                                folded throughout your trip.
+                            <p className="md axx byd byq md:text-sm">
+                                {Gpackage?.packageName}
+                            </p><p className="md axx byd byq  md:text-sm">
+                                {Gpackage?.packageDesc}
+                            </p>
+                            <p className="md axx byd byq  md:text-sm">
+                            {scheduledDate}, {slot.time}
                             </p>
                         </div>
                     </div>
@@ -100,11 +132,11 @@ const OrderSection=() => {
                                     clipRule="evenodd"
                                 />
                             </svg>
-                            <p className="jt awg awk axx">Delivered on <time dateTime="2021-01-05">January 5, 2021</time></p>
+                            <p className="jt awg awk axx">{status} on {bookingdate}</p>
                         </div>
                         <div className="lk lx zg abq aci acn aft agb avh awg awk bxl bxx cff cic">
-                            <div className="lx ut zl"><a href="#" className="adt ayn bli">View product</a></div>
-                            <div className="lx ut zl att"><a href="#" className="adt ayn bli">Buy again</a></div>
+                            <div className="lx ut zl"><a href="#" className="adt ayn bli">View Schedule</a></div>
+                            <div className="lx ut zl att"><a href="#" className="adt ayn bli">Schedule Again</a></div>
                         </div>
                     </div>
                 </li>

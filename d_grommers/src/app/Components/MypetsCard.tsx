@@ -16,7 +16,7 @@ const MypetsCard: React.FC<Props> = ({ petname,onClick }) => {
                 <div className="mb-5 flex justify-center items-center">
                     <div >
                         <Image
-                            src={"https://img.freepik.com/premium-photo/golden-retriever-puppy-sits-black-background_259177-102.jpg"}
+                            src={"https://www.odysseyhouse.com.au/wordpress/wp-content/uploads/2018/02/golden-retriever-SQUARE@.jpg"}
                             alt=''
                             width={200}
                             height={200}

@@ -208,6 +208,7 @@ const AddressStep = (props: Props) => {
     };
 
     const showeditModal = () => {
+        fetchLocations()
         setiseditModalOpen(true);
     };
 
