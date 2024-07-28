@@ -4,6 +4,9 @@ const packageSchema = new mongoose.Schema({
     packageName: {
         type: String,
     },
+    breedname: {
+        type: String,
+    },
     packageDesc: {
         type: String,
     },

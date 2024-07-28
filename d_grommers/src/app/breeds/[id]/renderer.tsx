@@ -7,6 +7,7 @@ import { Segmented } from 'antd';
 
 type GroomingPackage = {
     pid: string;
+    breedname:string;
     packageName: string;
     packageDesc: string;
     services: string[];
@@ -43,16 +44,20 @@ const SBRenderer: React.FC<Props> = ({ breeds }) => {
         if (Details) {
             // Search in all grooming packages for the specific pid
             let foundPackage: GroomingPackage | undefined;
-            
+    
             // Check each category
             for (let category in Details) {
                 foundPackage = Details[category as keyof GroomingPackages].find(pkg => pkg.pid === pid);
-                if (foundPackage) break;
+                if (foundPackage) {
+                    // Add breedname: breeds.breedname to the array
+                    foundPackage.breedname = breeds.breedname;
+                    break;
+                }
             }
-
+    
             return foundPackage;
         }
-
+    
         return undefined;
     };
     

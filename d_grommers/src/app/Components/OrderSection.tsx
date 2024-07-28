@@ -3,8 +3,9 @@ import React from 'react';
 import './OrderDetails.css';
 
 type Props = {
-
+    bookingid:string;
     Gpackage: GroomingPackage
+    bookingadrs:Address;
     slot: Slot
     status: string;
     bookingdate:string;
@@ -12,12 +13,23 @@ type Props = {
 
 type GroomingPackage = {
     pid: string;
+    breedname:string;
     packageName: string;
     packageDesc: string;
     services: string[];
     charge: number;
 };
 
+type Address = {
+    _id: string;
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    pin: string;
+    phone: string;
+}
 type Slot = {
     time: string;
     date: Sdate
@@ -30,12 +42,16 @@ type Sdate = {
     year: string;
 }
 
-const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) => {
+const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,bookingadrs, slot, status }) => {
     const { dayName, dayNumber, month, year } = slot.date;
     const scheduledDate = `${month} ${dayNumber}, ${year}`;
 
+    const SetBooking = ()=>{
+        localStorage.setItem("Singlebooking", JSON.stringify({ status,bookingid,bookingdate,bookingadrs,Gpackage,slot }));
+    }
+
     return (
-        <div className=" afm aft agb alt bbt cem cex rounded-lg md:w-9/12 ">
+        <div className=" afm aft agb alt bbt cem cex mb-7 rounded-lg md:w-9/12 sm:w-full ">
             <h3 className="t">Order placed on <time dateTime="2020-12-22">Dec 22, 2020</time></h3>
             <div className="lx zg afm agb aqz byw cby cdc cft">
                 <dl className="mb ut yp aap awg bvi cbx cti">
@@ -49,7 +65,7 @@ const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) =
                     </div>
                     <div>
                         <dt className="awk ayb">Total amount</dt>
-                        <dd className="ku awk ayb">₹40.00</dd>
+                        <dd className="ku awk ayb">₹{Gpackage.charge}.00</dd>
                     </div>
                 </dl>
                 <div className="ab lx zk cwo" data-headlessui-state="">
@@ -82,7 +98,7 @@ const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) =
                     </div>
                 </div>
                 <div className="md cti cwk das dav dbw">
-                    <a href="#" className="lx zg zl aeb afg agc alt ark asb awg awk axz bbt bik bnc bnh bnt boj">
+                    <a href={`/my-account/schedules/${bookingid}`} onClick={SetBooking} className="lx zg zl aeb afg agc alt ark asb awg awk axz bbt bik bnc bnh bnt boj">
                         <span>View Schedule</span>
                         <span className="t">AT48441546</span>
                     </a>
@@ -101,7 +117,7 @@ const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) =
                         </div>
                         <div className="jz ut awg">
                             <div className="awk ayb byt ccr md:text-xl">
-                                <h5>Bingo, Golden Retriver</h5>
+                                <h5>Bingo, {Gpackage.breedname}</h5>
                                 <p className="lb bxx flex  sm:hidden">
                                     {Gpackage?.packageName}<br />
                                     {scheduledDate}, {slot.time}
@@ -135,7 +151,7 @@ const OrderSection: React.FC<Props> = ({bookingdate, Gpackage, slot, status }) =
                             <p className="jt awg awk axx">{status} on {bookingdate}</p>
                         </div>
                         <div className="lk lx zg abq aci acn aft agb avh awg awk bxl bxx cff cic">
-                            <div className="lx ut zl"><a href="#" className="adt ayn bli">View Schedule</a></div>
+                            <div className="lx ut zl"><a href={`/my-account/schedules/${bookingid}`} className="adt ayn bli">View Schedule</a></div>
                             <div className="lx ut zl att"><a href="#" className="adt ayn bli">Schedule Again</a></div>
                         </div>
                     </div>

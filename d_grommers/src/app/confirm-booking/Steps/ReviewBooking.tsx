@@ -19,7 +19,13 @@ type PKGprop = [{
     _id: string;
 }]
 
-const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
+type Subtotal = [{
+    charge: number
+    tax?: number;
+    fee?: number;
+}]
+
+const ReviewBooking = ({ setCurrentStep, placeBooking }: Props) => {
 
     const [PaymentMethod, setPaymentMethod] = useState()
     const [PKG, setPKG] = useState<PKGprop>([{
@@ -29,6 +35,11 @@ const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
         pid: "",
         services: [],
         _id: ""
+    }])
+    const [subtotal, setsubtotal] = useState<Subtotal>([{
+        charge: 0,
+        tax: 0,
+        fee: 0
     }])
     const [Sch, setSch] = useState("")
     const [Address, setAddress] = useState<Adrs>({
@@ -75,6 +86,10 @@ const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
             _id: pkg._id
         }]);
 
+        setsubtotal([{
+            charge: pkg.charge,
+        }]);
+
 
     }
     console.log(PKG);
@@ -86,9 +101,13 @@ const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
         GetPKG()
     }, [])
 
+    const calAmount = () => {
+
+    }
+
 
     return (
-        <div className="flex flex-col sm:flex-row gap-5 pt-10 md:p-20 md:justify-center w-full">
+        <div className="flex  flex-col sm:flex-row gap-5 pt-10 md:p-20 md:justify-center w-full">
             <div className='bg-white w-full md:w-96 md:h-96'>
 
                 <div onClick={() => setCurrentStep(0)} className=' flex flex-row items-center justify-between p-5 border-b border-gray-400 hover:cursor-pointer'>
@@ -153,7 +172,7 @@ const ReviewBooking = ({ setCurrentStep,placeBooking }: Props) => {
 
                 <div className='sm:flex md:hidden fixed bottom-0 left-0 w-full bg-blue-800 justify-center items-center p-4'>
                     <button className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto h-12 hover:bg-gray-100'>
-                    Place booking
+                        Place booking
                     </button>
                 </div>
 

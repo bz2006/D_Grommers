@@ -43,6 +43,7 @@ type Address = {
 
 type GroomingPackage = {
     pid: string;
+    breedname:string;
     packageName: string;
     packageDesc: string;
     services: string[];
@@ -92,12 +93,14 @@ const Schedules = (props: Props) => {
     return (
         <>
             <Header />
-            <div className='flex p-10 items-center justify-center'>
+            <div className='flex pt-7 items-center justify-center flex-col '>
                 {Bookings?.map((sch) => (
                     <OrderSection
                         key={sch._id}
+                        bookingid={sch.bookingid}
                         bookingdate={sch.bookingdate}
                         Gpackage={sch.package}
+                        bookingadrs={sch.bookingadrs}
                         slot={sch.slot}
                         status={sch.status}
                     />
