@@ -17,7 +17,7 @@ function formatBookingDate(date: Date) {
 export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
-        const { userid, bookingpackage, bookingadrs, bookingpaymethod, bookingslot } = reqBody;
+        const { userid, bookingpackage, bookingadrs, bookingpaymethod,bookingamount, bookingslot } = reqBody;
 
         const bookingID = generateBookingID();
         const bookingDate = formatBookingDate(new Date());
@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
             package: bookingpackage,
             bookingadrs: bookingadrs,
             paymentMethod: bookingpaymethod.paymentMethod,
+            amount:bookingamount,
             slot: bookingslot,
             bookingdate: bookingDate
         });

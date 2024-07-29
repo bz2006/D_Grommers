@@ -85,11 +85,23 @@ const ReviewBooking = ({ setCurrentStep, placeBooking }: Props) => {
             services: pkg.services,
             _id: pkg._id
         }]);
+        calAmount(pkg)
 
         setsubtotal([{
             charge: pkg.charge,
         }]);
 
+
+    }
+    const calAmount = (pkg: any) => {
+        const amount = {
+            package: pkg?.charge,
+            fee: 50,
+            tax: 0,
+            paid: false,
+            discount: 0
+        }
+        localStorage.setItem("_dgBkAMT", JSON.stringify(amount));
 
     }
     console.log(PKG);
@@ -101,9 +113,7 @@ const ReviewBooking = ({ setCurrentStep, placeBooking }: Props) => {
         GetPKG()
     }, [])
 
-    const calAmount = () => {
 
-    }
 
 
     return (

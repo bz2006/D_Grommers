@@ -12,6 +12,7 @@ type bookingprops = {
     bookingid: string;
     bookingdate:string;
     status: string;
+    amount:Amount;
     package: GroomingPackage;
     bookingadrs: Address;
     paymentMethod: string;
@@ -28,6 +29,14 @@ type Sdate = {
     dayNumber: number;
     month: string;
     year: string;
+}
+
+type Amount={
+    package:  number;
+    fee: number;
+    tax: number;
+    discount: number;
+    paid: Boolean;
 }
 
 type Address = {
@@ -100,6 +109,7 @@ const Schedules = (props: Props) => {
                         bookingid={sch.bookingid}
                         bookingdate={sch.bookingdate}
                         Gpackage={sch.package}
+                        amount={sch.amount}
                         bookingadrs={sch.bookingadrs}
                         slot={sch.slot}
                         status={sch.status}

@@ -27,7 +27,7 @@ const BookingDetails = (props: Props) => {
             <div className='flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 p-5 md:p-20 justify-center'>
 
                 <div className='space-y-5 w-full md:w-3/4'>
-                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md'>
+                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
                         <div className='flex flex-col md:flex-row md:items-center'>
                             <h1 className='mb-2 md:mb-0 md:mr-20'>Booking ID : {booking?.bookingid}</h1>
                             <h1 className='mb-2 md:mb-0 md:mr-20'>Booking Date : {booking?.bookingdate}</h1>
@@ -40,7 +40,7 @@ const BookingDetails = (props: Props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md'>
+                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
                         <h1 className='mb-5 font-medium'>Booking Details</h1>
                         <div className='flex flex-col md:flex-row  md:space-x-32 space-y-5 md:space-y-0'>
 
@@ -85,7 +85,7 @@ const BookingDetails = (props: Props) => {
 
                         </div>
                     </div>
-                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md'>
+                    <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
                         <h1 className='mb-5 font-medium'>Address</h1>
                         <p className='text-gray-700'>{booking?.bookingadrs.name}<br/>{booking?.bookingadrs.address}<br/>
                         {booking?.bookingadrs.city} {booking?.bookingadrs.pin}, {booking?.bookingadrs.state}  {booking?.bookingadrs.country}<br/>{booking?.bookingadrs.phone}
@@ -93,28 +93,28 @@ const BookingDetails = (props: Props) => {
                     </div>
                 </div>
 
-                <div className='w-full md:w-1/4 text-black bg-white rounded-md p-5 md:p-7'>
+                <div className='w-full md:w-1/4 text-black bg-white rounded-md p-5 md:p-7 border border-gray-300 shadow-lg'>
                     <h1 className='mb-5 font-medium'>Payment Summary</h1>
                     <div className='space-y-3'>
                         <div className='flex justify-between'>
                             <span>Package</span>
-                            <span>₹749.00</span>
+                            <span>₹{booking?.amount.package}.00</span>
                         </div>
                         <div className='flex justify-between'>
                             <span>Convenience Fee</span>
-                            <span>₹50.00</span>
+                            <span>₹{booking?.amount.fee}.00</span>
                         </div>
                         <hr />
                         <div className='flex justify-between font-bold mb-10'>
                             <span>Grand Total</span>
-                            <span>₹60.00</span>
+                            <span>{booking?.amount.package+booking?.amount.fee}.00</span>
                         </div>
                         <div>
-                            <div className='flex bg-green-100 text-green-700 p-4 w-full rounded-md items-center mt-7 justify-center'>
-                                <h1 className='font-medium'>Payment Success</h1>
+                            <div className={`${booking?.amount.paid===false? "hidden":""} flex bg-green-100 text-green-700 p-4 w-full rounded-md items-center mt-7 justify-center`}>
+                                <h1 className='font-medium'>Payment Success {booking?.amount.paid}</h1>
                             </div>
 
-                            <button className='w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white'>
+                            <button className={`${booking?.amount.paid===false? "":"hidden"} block w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white`}>
                                 Pay Now
                             </button>
 

@@ -60,6 +60,25 @@ const SlotSchema = new mongoose.Schema({
     },
 });
 
+const AmountSchema = new mongoose.Schema({
+    package: {
+        type: Number
+    },
+    fee: {
+        type: Number
+    },
+    tax: {
+        type: Number
+    },
+    discount: {
+        type: Number
+    },
+    paid: {
+        type: Boolean
+    },
+
+});
+
 
 const bookingsSchema = new mongoose.Schema({
 
@@ -67,11 +86,11 @@ const bookingsSchema = new mongoose.Schema({
         type: String,
     },
 
-    bookingid:{
+    bookingid: {
         type: String,
     },
 
-    bookingdate:{
+    bookingdate: {
         type: String,
     },
 
@@ -83,9 +102,7 @@ const bookingsSchema = new mongoose.Schema({
         type: String
     },
 
-    amount:{
-        type:Number
-    },
+    amount: AmountSchema,
 
     slot: {
         time: {

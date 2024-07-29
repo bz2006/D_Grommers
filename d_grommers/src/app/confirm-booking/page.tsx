@@ -27,6 +27,7 @@ const ConfirmBooking = (props: Props) => {
         bookingpackage: Booking.bookingPKG,
         bookingadrs: Booking.bookingadrs,
         bookingpaymethod: Booking.bookingpayMethod,
+        bookingamount: Booking.bookingamount,
         bookingslot: Booking.bookingslot
       })
       console.log(BKplace);
@@ -57,7 +58,10 @@ const ConfirmBooking = (props: Props) => {
     const adrs = localStorage.getItem("_dgBkADRS");
     const bookingadrs = adrs ? JSON.parse(adrs) : null;
 
-    return { bookingPKG, bookingpayMethod, bookingslot, bookingadrs };
+    const amount = localStorage.getItem("_dgBkAMT");
+    const bookingamount = amount ? JSON.parse(amount) : null;
+
+    return { bookingPKG, bookingpayMethod,bookingamount, bookingslot, bookingadrs };
 
   }
 

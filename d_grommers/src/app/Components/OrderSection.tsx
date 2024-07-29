@@ -6,6 +6,7 @@ type Props = {
     bookingid:string;
     Gpackage: GroomingPackage
     bookingadrs:Address;
+    amount:Amount;
     slot: Slot
     status: string;
     bookingdate:string;
@@ -19,6 +20,14 @@ type GroomingPackage = {
     services: string[];
     charge: number;
 };
+
+type Amount={
+    package:  number;
+    fee: number;
+    tax: number;
+    discount: number;
+    paid: Boolean;
+}
 
 type Address = {
     _id: string;
@@ -42,16 +51,17 @@ type Sdate = {
     year: string;
 }
 
-const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,bookingadrs, slot, status }) => {
+const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,amount,bookingadrs, slot, status }) => {
     const { dayName, dayNumber, month, year } = slot.date;
     const scheduledDate = `${month} ${dayNumber}, ${year}`;
+    const grandTotal=amount.package+amount.fee
 
     const SetBooking = ()=>{
-        localStorage.setItem("Singlebooking", JSON.stringify({ status,bookingid,bookingdate,bookingadrs,Gpackage,slot }));
+        localStorage.setItem("Singlebooking", JSON.stringify({ status,bookingid,bookingdate,amount,bookingadrs,Gpackage,slot }));
     }
 
     return (
-        <div className=" afm aft agb alt bbt cem cex mb-7 rounded-lg md:w-9/12 sm:w-full ">
+        <div className=" afm aft agb alt bbt cem cex mb-7 border-gray-700 shadow-lg rounded-lg md:w-9/12 sm:w-full ">
             <h3 className="t">Order placed on <time dateTime="2020-12-22">Dec 22, 2020</time></h3>
             <div className="lx zg afm agb aqz byw cby cdc cft">
                 <dl className="mb ut yp aap awg bvi cbx cti">
@@ -65,7 +75,7 @@ const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,bookinga
                     </div>
                     <div>
                         <dt className="awk ayb">Total amount</dt>
-                        <dd className="ku awk ayb">₹{Gpackage.charge}.00</dd>
+                        <dd className="ku awk ayb">₹{grandTotal}.00</dd>
                     </div>
                 </dl>
                 <div className="ab lx zk cwo" data-headlessui-state="">
@@ -151,7 +161,7 @@ const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,bookinga
                             <p className="jt awg awk axx">{status} on {bookingdate}</p>
                         </div>
                         <div className="lk lx zg abq aci acn aft agb avh awg awk bxl bxx cff cic">
-                            <div className="lx ut zl"><a href={`/my-account/schedules/${bookingid}`} className="adt ayn bli">View Schedule</a></div>
+                            <div className="lx ut zl"><a href={`/my-account/schedules/${bookingid}`} onClick={SetBooking} className="adt ayn bli">View Schedule</a></div>
                             <div className="lx ut zl att"><a href="#" className="adt ayn bli">Schedule Again</a></div>
                         </div>
                     </div>

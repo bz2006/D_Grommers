@@ -29,6 +29,7 @@ const MonthlySlotSchema = new Schema({
 
 const GroomingSlotsSchema = new Schema({
     district: String,
+    fee:Number,
     monthlyslots: [MonthlySlotSchema]
 });
 
