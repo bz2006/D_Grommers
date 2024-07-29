@@ -34,8 +34,8 @@ const BookingDetails = (props: Props) => {
                             <div className='flex items-center'>
                                 <h1>Status :&nbsp;</h1>
                                 <h1 className={`font-bold ${booking?.status === "Scheduled" ? "text-yellow-500" :
-                                        booking?.status === "Groomed" ? "text-green-500" :
-                                            booking?.status === "Cancelled" ? "text-red-500" : ""
+                                    booking?.status === "Groomed" ? "text-green-500" :
+                                        booking?.status === "Cancelled" ? "text-red-500" : ""
                                     }`}>{booking?.status}</h1>
                             </div>
                         </div>
@@ -87,8 +87,8 @@ const BookingDetails = (props: Props) => {
                     </div>
                     <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
                         <h1 className='mb-5 font-medium'>Address</h1>
-                        <p className='text-gray-700'>{booking?.bookingadrs.name}<br/>{booking?.bookingadrs.address}<br/>
-                        {booking?.bookingadrs.city} {booking?.bookingadrs.pin}, {booking?.bookingadrs.state}  {booking?.bookingadrs.country}<br/>{booking?.bookingadrs.phone}
+                        <p className='text-gray-700 '>{booking?.bookingadrs.name}<br />{booking?.bookingadrs.address}<br />
+                            {booking?.bookingadrs.city} {booking?.bookingadrs.pin}, {booking?.bookingadrs.state}  {booking?.bookingadrs.country}<br />{booking?.bookingadrs.phone}
                         </p>
                     </div>
                 </div>
@@ -107,18 +107,18 @@ const BookingDetails = (props: Props) => {
                         <hr />
                         <div className='flex justify-between font-bold mb-10'>
                             <span>Grand Total</span>
-                            <span>{booking?.amount.package+booking?.amount.fee}.00</span>
+                            <span>{booking?.amount.package + booking?.amount.fee}.00</span>
                         </div>
                         <div>
-                            <div className={`${booking?.amount.paid===false? "hidden":""} flex bg-green-100 text-green-700 p-4 w-full rounded-md items-center mt-7 justify-center`}>
+                            <div className={`${booking?.amount.paid === false ? "hidden" : ""} flex bg-green-100 text-green-700 p-4 w-full rounded-md items-center mt-7 justify-center`}>
                                 <h1 className='font-medium'>Payment Success {booking?.amount.paid}</h1>
                             </div>
 
-                            <button className={`${booking?.amount.paid===false? "":"hidden"} block w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white`}>
+                            <button className={`${booking?.amount.paid === false ? "" : "hidden"} block w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white`}>
                                 Pay Now
                             </button>
 
-                            <button className='w-full border border-red-500 text-red-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-red-600 hover:text-white'>
+                            <button className={`${booking?.status === "Cancelled" || booking?.status === "Groomed" ? "hidden" : "block"} w-full border border-red-500 text-red-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-red-600 hover:text-white`}>
                                 Cancel Booking
                             </button>
                         </div>
