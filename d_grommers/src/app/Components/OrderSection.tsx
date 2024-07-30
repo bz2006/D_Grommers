@@ -3,26 +3,29 @@ import React from 'react';
 import './OrderDetails.css';
 
 type Props = {
-    bookingid:string;
+    id: string;
+    bookingid: string;
+    cancelDate: string;
+    groomedDate: string;
     Gpackage: GroomingPackage
-    bookingadrs:Address;
-    amount:Amount;
+    bookingadrs: Address;
+    amount: Amount;
     slot: Slot
     status: string;
-    bookingdate:string;
+    bookingdate: string;
 }
 
 type GroomingPackage = {
     pid: string;
-    breedname:string;
+    breedname: string;
     packageName: string;
     packageDesc: string;
     services: string[];
     charge: number;
 };
 
-type Amount={
-    package:  number;
+type Amount = {
+    package: number;
     fee: number;
     tax: number;
     discount: number;
@@ -51,13 +54,13 @@ type Sdate = {
     year: string;
 }
 
-const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,amount,bookingadrs, slot, status }) => {
+const OrderSection: React.FC<Props> = ({ id, bookingid, bookingdate, Gpackage, amount, bookingadrs, slot, status, cancelDate, groomedDate }) => {
     const { dayName, dayNumber, month, year } = slot.date;
     const scheduledDate = `${month} ${dayNumber}, ${year}`;
-    const grandTotal=amount.package+amount.fee
+    const grandTotal = amount.package + amount.fee
 
-    const SetBooking = ()=>{
-        localStorage.setItem("Singlebooking", JSON.stringify({ status,bookingid,bookingdate,amount,bookingadrs,Gpackage,slot }));
+    const SetBooking = () => {
+        localStorage.setItem("Singlebooking", JSON.stringify({ id, status, bookingid, bookingdate, amount, bookingadrs, Gpackage, slot, cancelDate, groomedDate }));
     }
 
     return (
@@ -139,26 +142,32 @@ const OrderSection: React.FC<Props> = ({bookingid,bookingdate, Gpackage,amount,b
                                 {Gpackage?.packageDesc}
                             </p>
                             <p className="md axx byd byq  md:text-sm">
-                            {scheduledDate}, {slot.time}
+                                {scheduledDate}, {slot.time}
                             </p>
                         </div>
                     </div>
                     <div className="lk byt ccr">
                         <div className="lx zg">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                                className="of si ayd"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                    clipRule="evenodd"
-                                />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className={`size-6 ${status === "Scheduled" ? "text-yellow-500" :
+                                status === "Groomed" ? "text-green-500" :
+                                    status === "Cancelled" ? "text-red-500" : ""
+                                }`}>
+                                {status === "Cancelled" ? (
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                ) : (
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                )}
                             </svg>
-                            <p className="jt awg awk axx">{status} on {bookingdate}</p>
+
+
+
+                            <p className="jt awg awk axx">
+                                {status !== "Cancelled"
+                                    ? status === "Groomed"
+                                        ? `${status} on ${groomedDate}`
+                                        : `${status} on ${bookingdate}`
+                                    : `${status} on ${cancelDate}`}
+                            </p>
                         </div>
                         <div className="lk lx zg abq aci acn aft agb avh awg awk bxl bxx cff cic">
                             <div className="lx ut zl"><a href={`/my-account/schedules/${bookingid}`} onClick={SetBooking} className="adt ayn bli">View Schedule</a></div>

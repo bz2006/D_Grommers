@@ -115,6 +115,12 @@ const bookingsSchema = new mongoose.Schema({
         type: String,
         default: 'Scheduled'
     },
+    cancelDate:{
+        type:String
+    },
+    groomedDate:{
+        type:String
+    },
 });
 
 const Bookings = mongoose.models.bookings || mongoose.model('bookings', bookingsSchema);

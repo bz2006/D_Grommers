@@ -151,9 +151,12 @@ console.log('clicked');
     return (
         <>
             <Header />
-            <Button type="primary" onClick={() => { setIsModalOpen(true) }}>
-                Add new pet
+            <div className='flex items-end justify-end p-5 md:mr-5 mt-5 '>
+            <Button type="primary" style={{backgroundColor:"#9400D3"}} size='large' onClick={() => { setIsModalOpen(true) }}>
+                Add New
             </Button>
+            </div>
+            
 
             <Modal title="Add Your Pet" open={isModalOpen} onOk={AddPet} width={400} onCancel={CloseModel}>
                 <div className='mt-2'>
@@ -234,13 +237,15 @@ console.log('clicked');
                     />
                 </div>
             </Modal>
-            <div className="grid grid-cols-1 gap-8 p-10  sm:grid-cols-2 lg:grid-cols-4">
+            <div className=" grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
                 {Pets.length > 0 && Pets.map((pet) => (
+                    <div className='flex  items-center justify-center'>
                     <MypetsCard
                         key={pet._id}
                         petname={pet.petname}
                         onClick={() => OpenDetails(pet._id)}
                     />
+                    </div>
                 ))}
 
             </div>

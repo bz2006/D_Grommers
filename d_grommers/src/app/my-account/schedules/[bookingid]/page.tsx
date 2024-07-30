@@ -1,26 +1,87 @@
 "use client"
 import Footer from '@/app/Components/Footer'
 import Header from '@/app/Components/Header'
+import HandlePayment from '@/helpers/HandlePayements/HandleNewPayemnt'
+import HandleVerifyPayment from '@/helpers/HandlePayements/HandleVerifyPayment'
 import React, { useEffect, useState } from 'react'
+import { Popconfirm } from 'antd'
+import axios from "axios"
 
 type Props = {}
+
+type PaymentProps = {
+    razorpay_order_id: string,
+    razorpay_payment_id: string,
+    razorpay_signature: string
+}
 
 const BookingDetails = (props: Props) => {
 
     const [booking, setBooking] = useState()
 
-    const GetBooking = () => {
+    const GetBooking = ({ paid = false, cancel = false } = {}) => {
         const data = localStorage.getItem('Singlebooking')
         const booking = data ? JSON.parse(data) : null;
-        console.log(booking)
+
+        if (paid) {
+            booking.amount.paid = paid
+            localStorage.setItem("Singlebooking", JSON.stringify(booking));
+        }
+        if (cancel) {
+            booking.status = "Cancelled"
+            localStorage.setItem("Singlebooking", JSON.stringify(booking));
+        }
         setBooking(booking)
+    }
+
+    const PayNow = async () => {
+
+        try {
+
+            const grandtotal = booking?.amount.package + booking?.amount.fee + booking?.amount.tax - booking?.amount.discount
+
+            const payment_res = await HandlePayment(grandtotal) as PaymentProps;
+            const verification = await HandleVerifyPayment(payment_res?.razorpay_order_id, payment_res.razorpay_payment_id, payment_res.razorpay_signature)
+
+            if (verification.data.data.verified === true) {
+                GetBooking({paid:true})
+
+                const BKpay_status = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/change-paymentstatus`, {
+                    bookingid: booking?.id,
+                    status: true
+                })
+            } else {
+                console.log("Payment Failed")
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    const CancelBooking = async () => {
+
+        try {
+
+            const BKpay_status = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/cancel-booking`, {
+                bookingid: booking?.id,
+                status: "Cancelled"
+            })
+            GetBooking({ cancel: true })
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     useEffect(() => {
         GetBooking()
     }, [])
 
-
+    console.log(booking?.status)
     return (
         <>
             <Header />
@@ -33,7 +94,7 @@ const BookingDetails = (props: Props) => {
                             <h1 className='mb-2 md:mb-0 md:mr-20'>Booking Date : {booking?.bookingdate}</h1>
                             <div className='flex items-center'>
                                 <h1>Status :&nbsp;</h1>
-                                <h1 className={`font-bold ${booking?.status === "Scheduled" ? "text-yellow-500" :
+                                <h1 className={`font-normal ${booking?.status === "Scheduled" ? "text-yellow-500" :
                                     booking?.status === "Groomed" ? "text-green-500" :
                                         booking?.status === "Cancelled" ? "text-red-500" : ""
                                     }`}>{booking?.status}</h1>
@@ -87,7 +148,7 @@ const BookingDetails = (props: Props) => {
                     </div>
                     <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
                         <h1 className='mb-5 font-medium'>Address</h1>
-                        <p className='text-gray-700 '>{booking?.bookingadrs.name}<br />{booking?.bookingadrs.address}<br />
+                        <p className='text-black '>{booking?.bookingadrs.name}<br />{booking?.bookingadrs.address}<br />
                             {booking?.bookingadrs.city} {booking?.bookingadrs.pin}, {booking?.bookingadrs.state}  {booking?.bookingadrs.country}<br />{booking?.bookingadrs.phone}
                         </p>
                     </div>
@@ -109,19 +170,38 @@ const BookingDetails = (props: Props) => {
                             <span>Grand Total</span>
                             <span>{booking?.amount.package + booking?.amount.fee}.00</span>
                         </div>
-                        <div>
-                            <div className={`${booking?.amount.paid === false ? "hidden" : ""} flex bg-green-100 text-green-700 p-4 w-full rounded-md items-center mt-7 justify-center`}>
-                                <h1 className='font-medium'>Payment Success {booking?.amount.paid}</h1>
+                        <div className={`${booking ? "block" : "hidden"}`}>
+                            <div
+                                className={`${booking?.amount.paid === true || booking?.status === "Cancelled" ? "flex bg-green-100 p-4 w-full rounded-md items-center mt-7 justify-center" : "hidden"} ${booking?.status === "Cancelled" ? "text-red-700" : "text-green-700"}`}
+                            >
+                                <h1 className='font-medium'>{booking?.status === "Cancelled" ? "Booking Cancelled" : "Payment Success"}</h1>
                             </div>
 
-                            <button className={`${booking?.amount.paid === false ? "" : "hidden"} block w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white`}>
+                            {/* Pay Now Button */}
+                            <button
+                                onClick={PayNow}
+                                className={`${booking?.amount.paid === true || booking?.status === "Cancelled" ? "hidden" : "block"} w-full border border-violet-500 text-violet-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-violet-600 hover:text-white`}
+                            >
                                 Pay Now
                             </button>
 
-                            <button className={`${booking?.status === "Cancelled" || booking?.status === "Groomed" ? "hidden" : "block"} w-full border border-red-500 text-red-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-red-600 hover:text-white`}>
-                                Cancel Booking
-                            </button>
+
+                            {/* Cancel Booking Button */}
+                            <Popconfirm
+                                title="Are you sure to cancel this booking"
+                                description="This proccess cannot be undone"
+                                 onConfirm={CancelBooking}
+                                okText="Yes"
+                                cancelText="No"
+                            >
+                                <button
+                                    className={`${booking?.status === "Cancelled" || booking?.status === "Groomed" ? "hidden" : "block"} w-full border border-red-500 text-red-500 bg-white py-2 mt-7 px-4 rounded-md hover:bg-red-600 hover:text-white`}
+                                >
+                                    Cancel Booking
+                                </button>
+                            </Popconfirm>
                         </div>
+
                     </div>
                 </div>
 

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { Radio } from 'antd';
+import { useRouter } from 'next/navigation';
 import ConfirmHeader from '../Components/ConfirmHeader'
 import axios from "axios"
 import AddressStep from './Steps/Address'
@@ -21,6 +21,7 @@ type PaymentProps = {
 const ConfirmBooking = (props: Props) => {
 
   const [CurrentStep, setCurrentStep] = useState(0)
+  const router = useRouter()
 
   const placeBooking = async () => {
 
@@ -30,15 +31,15 @@ const ConfirmBooking = (props: Props) => {
       const Booking = GetBookingDet()
       if (Booking.bookingpayMethod.paymentMethod === "Online-pay") {
 
-        const grandtotal=Booking.bookingamount.package+Booking.bookingamount.fee+Booking.bookingamount.tax-Booking.bookingamount.discount
-    
+        const grandtotal = Booking.bookingamount.package + Booking.bookingamount.fee + Booking.bookingamount.tax - Booking.bookingamount.discount
+
         const payment_res = await HandlePayment(grandtotal) as PaymentProps;
         const verification = await HandleVerifyPayment(payment_res?.razorpay_order_id, payment_res.razorpay_payment_id, payment_res.razorpay_signature)
         console.log(verification)
 
-        if(verification.data.data.verified===true){
+        if (verification.data.data.verified === true) {
           Booking.bookingamount.paid = true;
-         
+
           const BKplace = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/bookings/new-booking`, {
             userid: userid,
             bookingpackage: Booking.bookingPKG,
@@ -47,7 +48,8 @@ const ConfirmBooking = (props: Props) => {
             bookingamount: Booking.bookingamount,
             bookingslot: Booking.bookingslot
           })
-        }else{
+          router.push("/my-account/schedules")
+        } else {
           console.log("Payment Failed")
         }
 
@@ -62,15 +64,15 @@ const ConfirmBooking = (props: Props) => {
           bookingamount: Booking.bookingamount,
           bookingslot: Booking.bookingslot
         })
+        router.push("/my-account/schedules")
         console.log(BKplace);
       }
 
-      // if (BKplace) {
-      //   localStorage.removeItem("_dgBkPKG");
-      //   localStorage.removeItem("_dgBkPM");
-      //   localStorage.removeItem("_dgBkDT");
-      //   localStorage.removeItem("_dgBkADRS");
-      // }
+      // localStorage.removeItem("_dgBkPKG");
+      // localStorage.removeItem("_dgBkPM");
+      // localStorage.removeItem("_dgBkDT");
+      // localStorage.removeItem("_dgBkADRS");
+
 
     } catch (error) {
       console.log(error)

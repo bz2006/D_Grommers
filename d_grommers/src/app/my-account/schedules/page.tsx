@@ -12,6 +12,8 @@ type bookingprops = {
     bookingid: string;
     bookingdate:string;
     status: string;
+    cancelDate:string;
+    groomedDate:string;
     amount:Amount;
     package: GroomingPackage;
     bookingadrs: Address;
@@ -106,12 +108,15 @@ const Schedules = (props: Props) => {
                 {Bookings?.map((sch) => (
                     <OrderSection
                         key={sch._id}
+                        id={sch._id}
                         bookingid={sch.bookingid}
                         bookingdate={sch.bookingdate}
                         Gpackage={sch.package}
                         amount={sch.amount}
                         bookingadrs={sch.bookingadrs}
                         slot={sch.slot}
+                        cancelDate={sch.cancelDate}
+                        groomedDate={sch.groomedDate}
                         status={sch.status}
                     />
                 ))}
