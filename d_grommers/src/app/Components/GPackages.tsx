@@ -14,13 +14,13 @@ const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge, s
   return (
 
 
-    <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300">
+    <div className="bg-white rounded-lg  min-w-64 border border-gray-300 shadow-lg p-6 transform hover:scale-105 transition duration-300">
       <div className="mb-8">
-        <h3 className="text-2xl font-semibold text-white">{packagename}</h3>
+        <h3 className="text-2xl font-semibold text-black">{packagename}</h3>
         <p className="mt-4 text-gray-400">{packagedescription}</p>
       </div>
       <div className="mb-8">
-        <span className="text-5xl font-extrabold text-white">₹{charge}</span>
+        <span className="text-5xl font-extrabold text-black">₹{charge}</span>
       </div>
       <ul className="mb-8 space-y-4 text-gray-400">
         {services.length > 0 && services.map((srv,index) => (
@@ -42,7 +42,7 @@ const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge, s
       <a
         href="/confirm-booking"
         onClick={()=>onClick(keyProp)}
-        className="block w-full py-3 px-6 text-center rounded-md text-white font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+        className="block w-full py-3 px-6 text-center rounded-md text-violet-600 font-medium bg-white border border-violet-600 hover:bg-violet-100"
       >
         Book Now
       </a>

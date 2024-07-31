@@ -46,14 +46,9 @@ const SingleBreed = async (params: Props) => {
 
   return (
     <>
-      <Header />
+      <Header bgcolor={"bg-white"}/>
 
-      {/* <Image src={"https://static-vision.s3.ap-south-1.amazonaws.com/Firefly+20240620103708.png"}
-        width={500}
-        height={200}
-        className="w-full h-auto"
-        alt="Banner" /> */}
-      <section className="bg-gray-900 py-12">
+      <section className="bg-white py-12">
         <SBRenderer
           breeds={breed}
         />

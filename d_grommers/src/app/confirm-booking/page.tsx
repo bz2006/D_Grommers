@@ -9,6 +9,7 @@ import PaymentMStep from './Steps/PaymentMethod'
 import ReviewBooking from './Steps/ReviewBooking';
 import HandlePayment from '@/helpers/HandlePayements/HandleNewPayemnt';
 import HandleVerifyPayment from '@/helpers/HandlePayements/HandleVerifyPayment';
+import ConfirmBLarge from './large-screen/confirmB-large';
 
 type Props = {}
 
@@ -118,23 +119,22 @@ const ConfirmBooking = (props: Props) => {
   const Steps = [
     <AddressStep />,
     <TimeSlotSteps />,
-    <PaymentMStep />,
     <ReviewBooking setCurrentStep={setCurrentStep} placeBooking={placeBooking} />
   ]
 
 
   const NextStep = () => {
-    if (CurrentStep <= 2) {
+    if (CurrentStep <= 1) {
       setCurrentStep(CurrentStep + 1)
     }
   }
 
-  const BAckStep = () => {
+  const BackStep = () => {
     if (CurrentStep != 0) {
       setCurrentStep(CurrentStep - 1)
     }
   }
-
+  console.log(CurrentStep)
 
   return (
     <>
@@ -144,19 +144,58 @@ const ConfirmBooking = (props: Props) => {
         <BookingProgress />
       </div> */}
 
-      <div className='flex items-center justify-center'>
-        {Steps[CurrentStep]}
+      <div className='md:hidden'>
+        <div className=''>
+          {Steps[CurrentStep]}
+        </div>
+
+
+
+        <div className={`fixed bottom-0 left-0 w-full bg-blue-800 ${CurrentStep === 2 ? "hidden" : "flex"} justify-center items-center p-3`}>
+          {/* <button onClick={BackStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100 mr-2'>
+    back
+  </button> */}
+          <button onClick={NextStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
+            next
+          </button>
+        </div>
+
       </div>
 
+      <div className="hidden sm:block">
+        <div className='flex flex-row space-y-0 space-x-5 p-20 justify-center'>
+
+          <div className='space-y-5 w-full md:w-3/4'>
+            <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
+
+              <div>
+                <AddressStep />
+              </div>
+
+            </div>
+            <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
+              <div className='flex items-center justify-between mb-5'>
+                <h1 className='font-semibold text-xl'>Payment Method</h1>
+              </div>
+
+              <div>
+                <PaymentMStep />
+              </div>
+
+            </div>
 
 
-      <div className='fixed bottom-0 left-0 w-full bg-blue-800 flex justify-center items-center p-3'>
-        <button onClick={BAckStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
-          back
-        </button>
-        <button onClick={NextStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
-          next
-        </button>
+            <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
+
+
+              <TimeSlotSteps />
+            </div>
+
+          </div>
+
+          <ReviewBooking placeBooking={placeBooking} setCurrentStep={setCurrentStep} />
+
+        </div>
       </div>
     </>
   )

@@ -83,9 +83,9 @@ const SBRenderer: React.FC<Props> = ({ breeds }) => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-white sm:text-5xl">Grooming Packages for {breeds?.breedname}</h2>
-            <p className="mt-4 text-xl text-gray-400">Simple, transparent charges for your furry friend.</p>
-            <p className="mt-4 text-sm text-gray-400">Puppy {">"}6 Months | Teenage 7-18 Months | Adult {">"}19 Months</p>
+            <h2 className="text-3xl font-extrabold text-black sm:text-5xl">Grooming Packages for <span className='text-violet-700'>{breeds?.breedname}</span></h2>
+            <p className="mt-4 text-xl text-gray-500">Simple, transparent charges for your furry friend.</p>
+            <p className="mt-4 text-sm text-gray-500">Puppy {">"}6 Months | Teenage 7-18 Months | Adult {">"}19 Months</p>
           </div>
             <div className=' flex m-10 justify-center items-center '>
                 <Segmented

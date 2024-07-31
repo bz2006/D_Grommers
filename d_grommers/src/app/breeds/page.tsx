@@ -29,11 +29,15 @@ const BreedsPage = () => {
 
     fetchBreeds();
   }, []);
-
+console.log(breeds)
 
   return (
     <>
-      <Header />
+    <div
+      className="bg-cover bg-repeat bg-center sm:bg-[url('/wave-1-md.svg')] bg-[url('/wave-1-sm.svg')]"
+    >
+      <Header bgcolor={"bg-white"} />
+      <br /><br /><br /><br />
       <div className="p-10 flex flex-wrap items-center justify-center">
         {breeds.map((breed: Breed) => (
           <div key={breed._id}>
@@ -41,17 +45,20 @@ const BreedsPage = () => {
               <BreedsCard
                 range="Starting from"
                 name={breed.breedname}
-                price="₹45.00"
+                breed={breed}
                 imgSrc="https://user-images.githubusercontent.com/2805249/64069998-305de300-cc9a-11e9-8ae7-5a0fe00299f2.png"
-                bgColor="bg-violet-500"
-                priceColor="text-teal-500"
+                bgColor="bg-white"
+                priceColor="text-violet-600"
               />
             </Navigator>
           </div>
         ))}
       </div>
-      <Footer />
-    </>
+    </div>
+  
+    <Footer />
+  </>
+  
   );
 };
 

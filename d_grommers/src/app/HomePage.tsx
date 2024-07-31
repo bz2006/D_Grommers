@@ -5,10 +5,10 @@ import Footer from "./Components/Footer";
 export default function HomePage() {
   return (
     <>
-      <Header />
+      
 
       <div className="bg-cover bg-no-repeat bg-center pb-[6.5rem] md:pb-[4.5rem] " style={{ backgroundImage: 'url(/home-bg.svg)' }}>
-
+      <Header />
 
         <div className="w-full">
           <div className="p-6  md:p-12 lg:p-24 items-center ">

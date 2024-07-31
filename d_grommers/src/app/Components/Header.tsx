@@ -25,11 +25,16 @@ type User = {
   updatedAt: string;
   _id: string;
 };
+
+interface HeaderProps {
+  bgcolor?: string;
+}
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ bgcolor }) => {
 
 
   const router = useRouter()
@@ -68,7 +73,7 @@ const Header: React.FC = () => {
   console.log();
 
   return (
-    <Disclosure as="nav" className="bg-white">
+    <Disclosure as="nav" className={bgcolor?bgcolor:"bg-transparent"}>
       {({ open }: { open: boolean }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -98,7 +103,7 @@ const Header: React.FC = () => {
                       <a
                         key={item.name}
                         href={item.href}
-                        className=' text-black text-sm hover:bg-gray-200 rounded-md px-3 py-2  font-medium'
+                        className={` text-black text-sm ${bgcolor?`hover:${bgcolor}`:"hover:bg-gray-200"} rounded-md px-3 py-2  font-medium`} 
                       >
                         {item.name}
                       </a>

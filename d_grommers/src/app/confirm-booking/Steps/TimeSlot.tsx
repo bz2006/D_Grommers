@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { format } from 'date-fns';
 import "./Hidescroll.css"
 import axios from 'axios';
+import PaymentMStep from './PaymentMethod';
 
 type Props = {}
 
@@ -129,11 +130,9 @@ const TimeSlotSteps = (props: Props) => {
             const date = new Date(dateString.$d);
             const monthName = date.toLocaleString('default', { month: 'long' });
             const year = date.getFullYear();
-            console.log(monthName, year);
             const result = AllMonths?.monthlyslots.find(
                 slot => slot.month === monthName && slot.year === year
             );
-            console.log(result?.slots)
             setSelectedMonthDet({
                 month: monthName,
                 year: year
@@ -175,65 +174,144 @@ const TimeSlotSteps = (props: Props) => {
     };
 
     return (
-        <div>
-            <div className='p-2 flex justify-between'>
-                <DatePicker picker="month" size='large' disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
-                <div className='flex pr-2'>
-                    <button
-                        className='hidden md:block bg-white px-3 mr-2 font-bold text-black rounded-md'
-                        onClick={scrollLeft}
-                    >&lt;</button>
-                    <button
-                        className='hidden md:block bg-white px-3  font-bold text-black rounded-md'
-                        onClick={scrollRight}
-                    >&gt;</button>
+        <>
+            <div className='p-4 sm:block md:hidden '>
+                <div className='p-1 flex justify-between'>
+                <h1 className='font-semibold text-xl'>Date & Time</h1>
+                    <DatePicker picker="month" size='large' disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
                 </div>
-            </div>
+
+                {SelectedMonth ? (
+                    <>
+
+                        <div className='flex space-x-4 p-2 overflow-x-scroll CBhide-scrollbar' ref={scrollRef}>
+                            {SelectedMonth?.map((day, index) => {
+                                const availableTimeCount = day.time?.filter(time => time.available).length;
+                                return (
+                                    <div
+                                        onClick={() => { Selectdate(day.dayname, day.day, SelectedMonthDet?.month, SelectedMonthDet?.year, day.time) }}
+                                        key={index}
+                                        className='flex hover:cursor-pointer bg-slate-50 min-w-24 max-w-24 h-32 rounded-md items-center justify-center flex-col shrink-0'
+                                    >
+                                        <h1 className='text-black text-xl'>{day.dayname.slice(0, 3)}</h1>
+                                        <h1 className='text-black text-2xl m-3 font-bold'>{day.day}</h1>
+                                        <div className='flex flex-row justify-center items-center'>
+                                            <h1 className={`${availableTimeCount <= 2 ? "text-red-700" : "text-green-700"}  text-md font-extrabold flex mr-2`}>O</h1>
+                                            <h1 className='text-black'>{availableTimeCount} Slots</h1>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
 
 
-            <div className='flex space-x-4 p-2 overflow-x-scroll w-[300px] md:w-[600px] CBhide-scrollbar' ref={scrollRef}>
-                {SelectedMonth?.map((day, index) => {
-                    const availableTimeCount = day.time?.filter(time => time.available).length;
-                    return (
-                        <div
-                            onClick={() => { Selectdate(day.dayname, day.day, SelectedMonthDet?.month, SelectedMonthDet?.year, day.time) }}
-                            key={index}
-                            className='flex hover:cursor-pointer bg-slate-50 min-w-24 max-w-24 h-32 rounded-md items-center justify-center flex-col shrink-0'
-                        >
-                            <h1 className='text-black text-xl'>{day.dayname.slice(0, 3)}</h1>
-                            <h1 className='text-black text-2xl m-3 font-bold'>{day.day}</h1>
-                            <div className='flex flex-row justify-center items-center'>
-                                <h1 className={`${availableTimeCount <= 2 ? "text-red-700" : "text-green-700"}  text-md font-extrabold flex mr-2`}>O</h1>
-                                <h1 className='text-black'>{availableTimeCount} Slots</h1>
+                        {/* Time */}
+                        <div className={SelectedMonth && date.dayNumber ? 'block' : 'hidden'}>
+
+                            <div className='p-2 mt-3'>
+                                <h2>Available Time Slots</h2>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 p-2">
+
+                                {slots?.map((t) => (
+                                    <div
+                                        key={t._id}
+                                        onClick={() => t.available && SelectTime(t.time)}
+                                        className={`flex items-center text-black justify-center w-36 h-12 rounded-md flex-col ${t.available ? `hover:cursor-pointer ${time === t.time ? "bg-violet-600 text-white" : "bg-white"}` : "hover:cursor-not-allowed bg-gray-200"}`}
+                                    >
+                                        <h1 className={` text-xl ${!t.available ? "text-gray-500" : ""}`}>
+                                            {t.time}
+                                        </h1>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    )
-                })}
-            </div>
 
-
-            {/* Time */}
-            <div className={date.dayNumber ? 'block' : 'hidden'}>
-
-                <div className='p-2 mt-3'>
-                    <h2>Available Time Slots</h2>
-                </div>
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4 p-2">
-
-                    {slots?.map((t) => (
-                        <div
-                            key={t._id} 
-                            onClick={() => t.available && SelectTime(t.time)}
-                            className={`flex items-center text-black justify-center w-36 h-12 rounded-md flex-col ${t.available ? `hover:cursor-pointer ${time === t.time ? "bg-violet-600 text-white" : "bg-white"}` : "hover:cursor-not-allowed bg-gray-200"}`}
-                        >
-                            <h1 className={` text-xl ${!t.available ? "text-gray-500" : ""}`}>
-                                {t.time}
-                            </h1>
+                        <div className={time ? 'block' : 'hidden'}>
+                            <PaymentMStep />
                         </div>
-                    ))}
-                </div>
+                    </>
+                ) : (
+                    <div className='flex justify-center items-center'>
+                        <p>Please select a month to continue or the slots for the selected month haven't been finalized yet.</p>
+                    </div>
+                )}
             </div>
-        </div>
+            {/* ======================== */}
+
+            <div className='hidden md:block'>
+                <div className='flex items-center justify-between mb-5'>
+                    <h1 className='font-semibold text-xl'>Date & Time</h1>
+                    <DatePicker
+                        className='border border-gray-400 h-fit rounded-[0.300rem]'
+                        picker="month" size='large' disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
+                </div>
+
+                {SelectedMonth ? (
+                    <>
+                        <div className={`${SelectedMonth ? "flex justify-end mb-4" : "hidden"}`}>
+                            <button
+                                className='hidden hover:bg-slate-100 md:block bg-white px-3 py-1 mr-2 font-bold text-black rounded-md border border-gray-300 shadow-lg'
+                                onClick={scrollLeft}
+                            >&lt;</button>
+                            <button
+                                className='hidden md:block hover:bg-slate-100 bg-white px-3 py-1 mr-2 font-bold text-black rounded-md border border-gray-300 shadow-lg'
+                                onClick={scrollRight}
+                            >&gt;</button>
+                        </div>
+
+
+
+                        <div className='flex space-x-3  overflow-x-scroll  CBhide-scrollbar' ref={scrollRef}>
+                            {SelectedMonth?.map((day, index) => {
+                                const availableTimeCount = day.time?.filter(time => time.available).length;
+                                return (
+                                    <div
+                                        onClick={() => { Selectdate(day.dayname, day.day, SelectedMonthDet?.month, SelectedMonthDet?.year, day.time) }}
+                                        key={index}
+                                        className='flex hover:cursor-pointer bg-white min-w-24 max-w-24 h-32 rounded-md border border-gray-300 shadow-lg items-center justify-center flex-col shrink-0'
+                                    >
+                                        <h1 className='text-black text-xl'>{day.dayname.slice(0, 3)}</h1>
+                                        <h1 className='text-black text-2xl m-3 font-bold'>{day.day}</h1>
+                                        <div className='flex flex-row justify-center items-center'>
+                                            <h1 className={`${availableTimeCount <= 2 ? "text-red-700" : "text-green-700"}  text-md font-extrabold flex mr-2`}>O</h1>
+                                            <h1 className='text-black'>{availableTimeCount} Slots</h1>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+
+                        {/* Time */}
+                        <div className={SelectedMonth && date.dayNumber ? 'block' : 'hidden'}>
+
+                            <div className='p-2 mt-3'>
+                                <h2>Available Time Slots</h2>
+                            </div>
+                            <div className="flex space-x-5">
+
+                                {slots?.map((t) => (
+                                    <div
+                                        key={t._id}
+                                        onClick={() => t.available && SelectTime(t.time)}
+                                        className={`flex items-center text-black justify-center w-36 h-12 rounded-md border border-gray-300 shadow-lg flex-col ${t.available ? `hover:cursor-pointer ${time === t.time ? "bg-violet-600 text-white" : "bg-white"}` : "hover:cursor-not-allowed bg-gray-200"}`}
+                                    >
+                                        <h1 className={` text-xl ${!t.available ? "text-gray-500" : ""}`}>
+                                            {t.time}
+                                        </h1>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div>
+                        <h1>Please select a month to continue or the slots for the selected month haven't been finalized yet.</h1>
+                    </div>
+                )}
+            </div>
+        </>
     )
 }
 
