@@ -65,7 +65,7 @@ const MyPets = (props: Props) => {
             CloseModel()
             GetPets()
             message.success(`${name} added successfully`)
-            
+
         } catch (error) {
             console.log(error);
 
@@ -135,7 +135,7 @@ const MyPets = (props: Props) => {
     }
 
     const OpenDetails = (id: string) => {
-console.log('clicked');
+        console.log('clicked');
 
         for (let det of Pets) {
             if (det._id === id) {
@@ -144,19 +144,24 @@ console.log('clicked');
                 setBreed(det.breed)
                 setUpdateid(det._id)
                 setIsdetModalOpen(true)
-            } 
+            }
         }
     }
 
     return (
         <>
             <Header />
-            <div className='flex items-end justify-end p-5 md:mr-5 mt-5 '>
-            <Button type="primary" style={{backgroundColor:"#9400D3"}} size='large' onClick={() => { setIsModalOpen(true) }}>
-                Add New
-            </Button>
+            <div className='flex justify-between items-center p-5 md:mr-5 mt-5 '>
+
+                <div>
+                    <h1 className='text-2xl text-black'>Your Pets</h1>
+                    <p className='text-gray-400'>Manage your pets</p>
+                </div>
+                <Button type="primary" style={{ backgroundColor: "#9400D3" }} size='large' onClick={() => { setIsModalOpen(true) }}>
+                    Add New
+                </Button>
             </div>
-            
+
 
             <Modal title="Add Your Pet" open={isModalOpen} onOk={AddPet} width={400} onCancel={CloseModel}>
                 <div className='mt-2'>
@@ -240,11 +245,11 @@ console.log('clicked');
             <div className=" grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
                 {Pets.length > 0 && Pets.map((pet) => (
                     <div className='flex  items-center justify-center'>
-                    <MypetsCard
-                        key={pet._id}
-                        petname={pet.petname}
-                        onClick={() => OpenDetails(pet._id)}
-                    />
+                        <MypetsCard
+                            key={pet._id}
+                            petname={pet.petname}
+                            onClick={() => OpenDetails(pet._id)}
+                        />
                     </div>
                 ))}
 

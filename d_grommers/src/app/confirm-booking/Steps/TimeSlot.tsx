@@ -233,7 +233,7 @@ const TimeSlotSteps = (props: Props) => {
                     </>
                 ) : (
                     <div className='flex justify-center items-center'>
-                        <p>Please select a month to continue or the slots for the selected month haven't been finalized yet.</p>
+                        <p>Please select a month to continue or sometimes the slots for the selected month haven't been finalized yet.</p>
                     </div>
                 )}
             </div>
@@ -241,7 +241,7 @@ const TimeSlotSteps = (props: Props) => {
 
             <div className='hidden md:block'>
                 <div className='flex items-center justify-between mb-5'>
-                    <h1 className='font-semibold text-xl'>Date & Time</h1>
+                    <h1 className='font-medium text-xl'>Date & Time</h1>
                     <DatePicker
                         className='border border-gray-400 h-fit rounded-[0.300rem]'
                         picker="month" size='large' disabledDate={disabledDate} onChange={onChangeDate} format={"MMMM YYYY"} />
@@ -307,7 +307,7 @@ const TimeSlotSteps = (props: Props) => {
                     </>
                 ) : (
                     <div>
-                        <h1>Please select a month to continue or the slots for the selected month haven't been finalized yet.</h1>
+                        <h1>Please select a month to continue or sometimes the slots for the selected month haven't been finalized yet.</h1>
                     </div>
                 )}
             </div>

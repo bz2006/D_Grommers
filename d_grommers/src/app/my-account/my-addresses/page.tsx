@@ -1,7 +1,9 @@
-
+"use client"
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 import { Button, Modal, Input, message, Select } from 'antd';
 import axios from 'axios';
+import Header from '@/app/Components/Header';
+import Footer from '@/app/Components/Footer';
 
 type Props = {}
 interface NewAddress {
@@ -44,7 +46,8 @@ type Loc = {
 type bg = {
     adrsid: string;
 }
-const AddressStep = (props: Props) => {
+
+const Addresses = (props: Props) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedbg, setselectedbg] = useState<bg>({
@@ -72,9 +75,6 @@ const AddressStep = (props: Props) => {
         pin: "",
         phone: ""
     });
-
-    const { name, address, city, state, country, pin } = NewAddress;
-    console.log({ name, address, city, state, country, pin });
 
     const GetUser = async () => {
         try {
@@ -169,17 +169,6 @@ const AddressStep = (props: Props) => {
 
     }
 
-    useEffect(() => {
-        const adrs = localStorage.getItem("_dgBkADRS");
-        const address = adrs ? JSON.parse(adrs) : null;
-        if (address) {
-            setselectedbg({
-                adrsid: address._id
-            })
-        }
-    }, [])
-
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -239,102 +228,52 @@ const AddressStep = (props: Props) => {
         });
     };
 
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const scrollLeft = () => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollBy({
-                left: -300, // Adjust the value as needed
-                behavior: 'smooth',
-            });
-        }
-    };
-    const scrollRight = () => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollBy({
-                left: 300, // Adjust the value as needed
-                behavior: 'smooth',
-            });
-        }
-    };
-
-
     return (
-        <div>
-            <div className='sm:block md:hidden items-center justify-center'>{/* Sm Address */}
-                <div className='flex  w-full items-center justify-evenly'>
-                <div className='items-start'>
-                    <h1 className='text-2xl text-black mt-10'>Your Addresses</h1>
-                    <p className='text-gray-400'>Select a address to continue</p>
-                </div>
-                </div>
-                <div className='flex mt-7 items-center justify-center w-full  md:mb-20'>
-                    <div className="grid grid-cols-1 gap-5 pl-4 pr-4 pt-4 pb-4 items-center " >
+        <>
+            <Header bgcolor='bg-white' />
 
-                    <button onClick={showModal} className="bg-white text-black px-4 py-3 rounded-md border border-gray-300 shadow-lg hover:bg-gray-300">
-                        Add New
-                    </button>
-                        {Alladdress?.length > 0 && Alladdress.map((adrs) => (
-                            <div key={adrs._id} className={`flex ${selectedbg.adrsid == adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white  text-black'} rounded-md border border-gray-300 shadow-lg p-5 md:w-100 justify-between sm:w-full hover:cursor-pointer `}
-                                onClick={() => SelectAddress(adrs, adrs._id)}>
-                                <div className='mr-12 ' >
-                                    <p>{adrs.name}<br />{adrs.address}<br />{adrs.phone}</p>
-                                </div>
-                                <div className='flex items-center justify-center'>
-                                    <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 text-black p-1 px-3">
-                                        Edit
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-
-                    </div>
+            <div className='md:px-20 mt-10 p-5 flex justify-between'>
+                <div>
+                    <h1 className='text-2xl text-black'>Your Addresses</h1>
+                    <p className='text-gray-400'>Manage your grooming or delivery address</p>
                 </div>
+                <button
+                    onClick={showModal}
+                    className="hidden md:block hover:bg-slate-100 bg-white px-4 p-2 text-black rounded-md border border-gray-300 shadow-lg"
+                >
+                    Add New
+                </button>
 
             </div>
 
-            <div className='hidden md:block'>{/* Md Address */}
-                <div className='flex items-center justify-between  mb-5 '>
-                    <h1 className='font-medium text-xl'>Address</h1>
-                    <div className='flex pr-2'>
+            <div className='grid gap-5 p-5 md:px-20 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
 
-                        <button
-                        onClick={showModal}
-                        className="className='hidden hover:bg-slate-100 md:block bg-white px-3 py-1 mr-2  text-black rounded-md border border-gray-300 shadow-lg'
-">                                    Add New
-                        </button>
-                        <button
-                            className='hidden hover:bg-slate-100 md:block bg-white px-3 py-1 mr-2 font-bold text-black rounded-md border border-gray-300 '
-                            onClick={scrollLeft}
-                        >&lt;</button>
-                        <button
-                            className='hidden md:block hover:bg-slate-100 bg-white px-3 py-1 mr-2 font-bold text-black rounded-md border border-gray-300 '
-                            onClick={scrollRight}
-                        >&gt;</button>
-                    </div>
-                </div>
+            <button
+    onClick={showModal}
+    className="block md:hidden hover:bg-slate-100 bg-white px-4 p-2 text-black rounded-md border border-gray-300 shadow-lg"
+>
+    Add New
+</button>
 
-
-
-                <div className='flex space-x-3 overflow-x-scroll CBhide-scrollbar' ref={scrollRef}>
-                    {Alladdress?.length > 0 && Alladdress.map((adrs) => (
-                        <div key={adrs._id}
-                            className={`flex hover:cursor-pointer  ${selectedbg.adrsid == adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white  text-black'} rounded-md border border-gray-300 shadow-lg p-5`}
-                            onClick={() => SelectAddress(adrs, adrs._id)}>
-                            <div
-                                className='mr-5'
-                            >
-                                <p>{adrs.name.split(' ')[0]}<br />{adrs.address.slice(0, 15)}....<br />{adrs.phone}</p>
-                            </div>
-                            <div className='flex items-center justify-center'>
-                                <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 rounded-md text-black p-1 px-3">
-                                    Edit
-                                </button>
-                            </div>
+                {Alladdress?.length > 0 && Alladdress.map((adrs) => (
+                    <div
+                        key={adrs._id}
+                        className='flex flex-row bg-white text-black hover:cursor-pointer rounded-md border border-gray-300 shadow-lg p-5'
+                        onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }}
+                    >
+                        <div className='flex-grow'>
+                            <p>{adrs.name.split(' ')[0]}<br />{adrs.address}<br />{adrs.city} {adrs.pin}<br />{adrs.state}{adrs.country}<br />{adrs.phone}</p>
                         </div>
-                    ))}
-                </div>
-
+                        <div className='flex items-center justify-center'>
+                            <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 rounded-md text-black p-1 px-3">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
+
+
 
             {/* Add new Address */}
 
@@ -419,9 +358,11 @@ const AddressStep = (props: Props) => {
 
             </Modal >
 
+            <Footer />
 
-        </div >
+        </>
     )
+
 }
 
-export default AddressStep
+export default Addresses

@@ -82,7 +82,7 @@ const PaymentMStep = (props: Props) => {
                         </div>
                         <div className='flex items-center '>
                             <div className="p-1 px-2">
-                                <Checkbox checked={OnlineMethod} value={OnlineMethod} className='border border-black h-[18px] rounded-[0.300rem]' onChange={() => ChangeOnline(OnlineMethod === false ? true : false)} />
+                                <Checkbox checked={OnlineMethod} value={OnlineMethod} className='border border-black h-[17.5px] rounded-[0.300rem]' onChange={() => ChangeOnline(OnlineMethod === false ? true : false)} />
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@ const PaymentMStep = (props: Props) => {
                         </div>
                         <div className='flex items-center justify-center'>
                             <div className=" p-1 px-4 ">
-                                <Checkbox checked={OngroomMethod} className='border border-black h-[18px] rounded-[0.300rem]' value={OngroomMethod} onChange={() => ChangeOngroom(OngroomMethod === false ? true : false)} />
+                                <Checkbox checked={OngroomMethod} className='border border-black h-[17.5px] rounded-[0.300rem]' value={OngroomMethod} onChange={() => ChangeOngroom(OngroomMethod === false ? true : false)} />
                             </div>
                         </div>
                     </div>

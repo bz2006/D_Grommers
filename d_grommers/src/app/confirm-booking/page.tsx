@@ -144,6 +144,8 @@ const ConfirmBooking = (props: Props) => {
         <BookingProgress />
       </div> */}
 
+
+
       <div className='md:hidden'>
         <div className=''>
           {Steps[CurrentStep]}
@@ -152,9 +154,7 @@ const ConfirmBooking = (props: Props) => {
 
 
         <div className={`fixed bottom-0 left-0 w-full bg-blue-800 ${CurrentStep === 2 ? "hidden" : "flex"} justify-center items-center p-3`}>
-          {/* <button onClick={BackStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100 mr-2'>
-    back
-  </button> */}
+
           <button onClick={NextStep} className='bg-white text-blue-800 p-2 rounded-md w-full sm:w-auto md:w-96 hover:bg-gray-100'>
             next
           </button>
@@ -162,8 +162,16 @@ const ConfirmBooking = (props: Props) => {
 
       </div>
 
-      <div className="hidden sm:block">
-        <div className='flex flex-row space-y-0 space-x-5 p-20 justify-center'>
+      <div className="hidden sm:block p-10">
+
+        <div className='mb-7'>
+          <h1 className='text-2xl text-black'>Confirm Booking</h1>
+          <p className='text-gray-400'>Review your booking details to continue to schedule to booking</p>
+        </div>
+
+        <div className='flex flex-row space-y-0 space-x-5  justify-center'>
+
+
 
           <div className='space-y-5 w-full md:w-3/4'>
             <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
@@ -175,7 +183,7 @@ const ConfirmBooking = (props: Props) => {
             </div>
             <div className='w-full bg-white text-black p-5 md:p-7 rounded-md border border-gray-300 shadow-lg'>
               <div className='flex items-center justify-between mb-5'>
-                <h1 className='font-semibold text-xl'>Payment Method</h1>
+                <h1 className='font-medium text-xl'>Payment Method</h1>
               </div>
 
               <div>
@@ -192,9 +200,12 @@ const ConfirmBooking = (props: Props) => {
             </div>
 
           </div>
+          <div className='flex flex-col' >
 
-          <ReviewBooking placeBooking={placeBooking} setCurrentStep={setCurrentStep} />
 
+            <ReviewBooking placeBooking={placeBooking} setCurrentStep={setCurrentStep} />
+
+          </div>
         </div>
       </div>
     </>
