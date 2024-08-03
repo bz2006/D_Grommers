@@ -95,6 +95,7 @@ const Header: React.FC<HeaderProps> = ({ bgcolor }) => {
                     className="h-8 w-auto"
                     src="/d_grommers.png"
                     alt="D_Groomer"
+                    
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">

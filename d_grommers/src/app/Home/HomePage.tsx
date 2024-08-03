@@ -2,6 +2,8 @@ import Image from "next/image";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import NewsLetter from "./Sections/newsletter";
+import HowWeWork from "./Sections/how-wework";
+import Shorts from "./Sections/shorts";
 
 export default function HomePage() {
   return (
@@ -53,6 +55,10 @@ export default function HomePage() {
         </div>
 
       </div>
+
+      <Shorts/>
+
+      <HowWeWork/>
 
       <NewsLetter />
 
