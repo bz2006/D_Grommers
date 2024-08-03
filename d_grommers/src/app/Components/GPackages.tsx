@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 type Props = {
   key: string;
@@ -39,13 +40,13 @@ const GPackages: React.FC<Props> = ({ packagename, packagedescription, charge, s
         ))}
 
       </ul>
-      <a
+      <Link
         href="/confirm-booking"
         onClick={()=>onClick(keyProp)}
         className="block w-full py-3 px-6 text-center rounded-md text-violet-600 font-medium bg-white border border-violet-600 hover:bg-violet-100"
       >
         Book Now
-      </a>
+      </Link>
     </div>
 
   )

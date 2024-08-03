@@ -1,10 +1,17 @@
 import React from 'react';
 
-const FullScreenVideoOverlay = ({ isOpen, onClose, videoSrc }) => {
+
+type Props={
+    isOpen: boolean;
+    onClose: () => void;
+    videoSrc: string;
+}
+
+const FullScreenVideoOverlay = ({ isOpen, onClose, videoSrc }:Props) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50" onClick={onClose}>
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
             <div className="relative w-full h-full flex items-center justify-center">
                 {/* Close Button */}
                 <svg

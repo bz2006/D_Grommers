@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
-import NewsLetter from "./Sections/newsletter";
+import NewsLetter from "./Sections/newsletter";import Link from 'next/link'
 import HowWeWork from "./Sections/how-wework";
 import Shorts from "./Sections/shorts";
+import SkeletonCard from "../breeds/Skeleton";
 
 export default function HomePage() {
   return (
@@ -55,7 +56,7 @@ export default function HomePage() {
         </div>
 
       </div>
-
+      
       <Shorts/>
 
       <HowWeWork/>

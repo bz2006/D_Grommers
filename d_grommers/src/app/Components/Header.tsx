@@ -1,6 +1,5 @@
 'use client';
-import { GetuserTK } from '@/helpers/route';
-import { NextRequest } from "next/server";
+import Link from 'next/link'
 import {
   Disclosure,
   Menu,
@@ -73,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ bgcolor }) => {
   console.log();
 
   return (
-    <Disclosure as="nav" className={bgcolor?bgcolor:"bg-transparent"}>
+    <Disclosure as="nav" className={bgcolor ? bgcolor : "bg-transparent"}>
       {({ open }: { open: boolean }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -95,31 +94,25 @@ const Header: React.FC<HeaderProps> = ({ bgcolor }) => {
                     className="h-8 w-auto"
                     src="/d_grommers.png"
                     alt="D_Groomer"
-                    
+
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4 justify-center">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
                         href={item.href}
-                        className={` text-black text-sm ${bgcolor?`hover:${bgcolor}`:"hover:bg-gray-200"} rounded-md px-3 py-2  font-medium`} 
+                        className=" text-black text-sm hover:bg-gray-200 rounded-md px-3 py-2  font-medium "
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
