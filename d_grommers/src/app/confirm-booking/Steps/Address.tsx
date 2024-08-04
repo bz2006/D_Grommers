@@ -2,6 +2,7 @@
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 import { Button, Modal, Input, message, Select } from 'antd';
 import axios from 'axios';
+import AdrsSkeleton from './AdrsSkeleton';
 
 type Props = {}
 interface NewAddress {
@@ -51,6 +52,7 @@ const AddressStep = (props: Props) => {
         adrsid: "",
     });
     const [iseditModalOpen, setiseditModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [Alladdress, setallAdrs] = useState<Address[]>([])
     const [locations, setLocations] = useState<Loc[]>([]);
     const [selectedaddress, setSelectedadrs] = useState<Sel[]>([{
@@ -111,6 +113,7 @@ const AddressStep = (props: Props) => {
             const id = await GetUser()
             const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/user/address/getalladdress/${id}`)
             setallAdrs(res.data["data"])
+           setLoading(false)
         } catch (error) {
             console.log(error);
 
@@ -160,6 +163,7 @@ const AddressStep = (props: Props) => {
     };
 
     useEffect(() => {
+        setLoading(true)
         GetAddress()
     }, [])
 
@@ -262,35 +266,58 @@ const AddressStep = (props: Props) => {
         <div>
             <div className='sm:block md:hidden items-center justify-center'>{/* Sm Address */}
                 <div className='flex  w-full items-center justify-evenly'>
-                <div className='items-start'>
-                    <h1 className='text-2xl text-black mt-10'>Your Addresses</h1>
-                    <p className='text-gray-400'>Select a address to continue</p>
-                </div>
-                </div>
-                <div className='flex mt-7 items-center justify-center w-full  md:mb-20'>
-                    <div className="grid grid-cols-1 gap-5 pl-4 pr-4 pt-4 pb-4 items-center " >
-
-                    <button onClick={showModal} className="bg-white text-black px-4 py-3 rounded-md border border-gray-300 shadow-lg hover:bg-gray-300">
-                        Add New
-                    </button>
-                        {Alladdress?.length > 0 && Alladdress.map((adrs) => (
-                            <div key={adrs._id} className={`flex ${selectedbg.adrsid == adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white  text-black'} rounded-md border border-gray-300 shadow-lg p-5 md:w-100 justify-between sm:w-full hover:cursor-pointer `}
-                                onClick={() => SelectAddress(adrs, adrs._id)}>
-                                <div className='mr-12 ' >
-                                    <p>{adrs.name}<br />{adrs.address}<br />{adrs.phone}</p>
-                                </div>
-                                <div className='flex items-center justify-center'>
-                                    <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 text-black p-1 px-3">
-                                        Edit
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-
+                    <div className=' flex flex-col items-center justify-center'>
+                        <h1 className='text-2xl text-black mt-10'>Your Addresses</h1>
+                        <p className='text-gray-400'>Select a address to continue</p>
                     </div>
                 </div>
 
+                {loading === false ? (
+
+                    <div className='flex mt-7 items-center justify-center w-full  md:mb-20'>
+                        <div className="grid grid-cols-1 gap-5 pl-4 pr-4 pt-4 pb-4 items-center">
+                            <button onClick={showModal} className="bg-white text-black px-4 py-3 rounded-md border border-gray-300 shadow-lg hover:bg-gray-300">
+                                Add New
+                            </button>
+                            {Alladdress?.length > 0 ? (
+                                Alladdress.map((adrs) => (
+                                    <div
+                                        key={adrs._id}
+                                        className={`flex ${selectedbg.adrsid === adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white text-black'} rounded-md border border-gray-300 shadow-lg p-5 md:w-100 justify-between sm:w-full hover:cursor-pointer`}
+                                        onClick={() => SelectAddress(adrs, adrs._id)}
+                                    >
+                                        <div className='mr-12'>
+                                            <p>{adrs.name}<br />{adrs.address}<br />{adrs.phone}</p>
+                                        </div>
+                                        <div className='flex items-center justify-center'>
+                                            <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 text-black p-1 px-3">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                               null
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className='mt-7 items-center justify-center'>
+                         <div className="grid grid-cols-1 gap-5 pl-4 pr-4 pt-4 pb-4 items-center">
+                        <AdrsSkeleton />
+                        <AdrsSkeleton />
+                        <AdrsSkeleton />
+                        <AdrsSkeleton />
+                        </div>
+                    </div>
+                )}
+
+
             </div>
+
+
+
+
 
             <div className='hidden md:block'>{/* Md Address */}
                 <div className='flex items-center justify-between  mb-5 '>
@@ -298,8 +325,8 @@ const AddressStep = (props: Props) => {
                     <div className='flex pr-2'>
 
                         <button
-                        onClick={showModal}
-                        className="className='hidden hover:bg-slate-100 md:block bg-white px-3 py-1 mr-2  text-black rounded-md border border-gray-300 shadow-lg'
+                            onClick={showModal}
+                            className="className='hidden hover:bg-slate-100 md:block bg-white px-3 py-1 mr-2  text-black rounded-md border border-gray-300 shadow-lg'
 ">                                    Add New
                         </button>
                         <button
@@ -313,28 +340,45 @@ const AddressStep = (props: Props) => {
                     </div>
                 </div>
 
-
-
                 <div className='flex space-x-3 overflow-x-scroll CBhide-scrollbar' ref={scrollRef}>
-                    {Alladdress?.length > 0 && Alladdress.map((adrs) => (
-                        <div key={adrs._id}
-                            className={`flex hover:cursor-pointer  ${selectedbg.adrsid == adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white  text-black'} rounded-md border border-gray-300 shadow-lg p-5`}
-                            onClick={() => SelectAddress(adrs, adrs._id)}>
-                            <div
-                                className='mr-5'
-                            >
-                                <p>{adrs.name.split(' ')[0]}<br />{adrs.address.slice(0, 15)}....<br />{adrs.phone}</p>
-                            </div>
-                            <div className='flex items-center justify-center'>
-                                <button onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }} className="bg-gray-200 rounded-md text-black p-1 px-3">
-                                    Edit
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                    {loading === false ? (
+                        Alladdress?.length > 0 ? (
+                            Alladdress.map((adrs) => (
+                                <div
+                                    key={adrs._id}
+                                    className={`flex hover:cursor-pointer ${selectedbg.adrsid === adrs._id ? 'bg-violet-600 text-white border-violet-600' : 'bg-white text-black'} rounded-md border border-gray-300 shadow-lg p-5`}
+                                    onClick={() => SelectAddress(adrs, adrs._id)}
+                                >
+                                    <div className='mr-5'>
+                                        <p>{adrs.name.split(' ')[0]}<br />{adrs.address.slice(0, 15)}....<br />{adrs.phone}</p>
+                                    </div>
+                                    <div className='flex items-center justify-center'>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); UpdateInit(adrs); showeditModal(); }}
+                                            className="bg-gray-200 rounded-md text-black p-1 px-3"
+                                        >
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            null
+                        )
+                    ) : (
+                        <>
+                            <AdrsSkeleton />
+                            <AdrsSkeleton />
+                            <AdrsSkeleton />
+                            <AdrsSkeleton />
+                        </>
+                    )}
                 </div>
 
+
             </div>
+
+
 
             {/* Add new Address */}
 
