@@ -17,6 +17,7 @@ type Pet = {
     petname: string;
     dob: string;
     breed: string;
+    image: string;
 }
 
 const MyPets = (props: Props) => {
@@ -28,6 +29,8 @@ const MyPets = (props: Props) => {
     const [name, setName] = useState("");
     const [DOB, setDOB] = useState("");
     const [breed, setBreed] = useState("");
+    const [image, setImage] = useState<File | null>(null);
+    const [prImage, setprImage] = useState("")
 
     const GetUser = async () => {
         try {
@@ -61,7 +64,21 @@ const MyPets = (props: Props) => {
 
         try {
             const id = await GetUser()
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/addpet`, { userid: id, petname: name, dob: DOB, breed: breed })
+            console.log(image)
+            const formData = new FormData();
+            formData.append('userid', id);
+            formData.append('petname', name);
+            formData.append('dob', DOB);
+            formData.append('breed', breed);
+            formData.append('image', image);
+
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/pets/addpet`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+
             CloseModel()
             GetPets()
             message.success(`${name} added successfully`)
@@ -128,6 +145,7 @@ const MyPets = (props: Props) => {
     }
     const ClosedetModel = () => {
         setIsdetModalOpen(false)
+        setprImage("")
         setName("")
         setDOB("")
         setBreed("")
@@ -143,7 +161,9 @@ const MyPets = (props: Props) => {
                 setDOB(det.dob)
                 setBreed(det.breed)
                 setUpdateid(det._id)
+                setprImage(det.image)
                 setIsdetModalOpen(true)
+                
             }
         }
     }
@@ -165,7 +185,7 @@ const MyPets = (props: Props) => {
 
             <Modal title="Add Your Pet" open={isModalOpen} onOk={AddPet} width={400} onCancel={CloseModel}>
                 <div className='mt-2'>
-                    <ImageUpload />
+                    <ImageUpload onImageChange={(file) => setImage(file)} />
                 </div>
 
                 <div className='flex items-center justify-evenly flex-col mt-7'>
@@ -218,7 +238,7 @@ const MyPets = (props: Props) => {
                 ]}
                 open={isdetModalOpen} width={500} onCancel={ClosedetModel}>
                 <div className='mt-2'>
-                    <ImageUpload />
+                    <ImageUpload onImageChange={(file) => setImage(file)} primage={prImage} />
                 </div>
 
                 <div className='flex items-center justify-evenly flex-col mt-7'>
@@ -248,6 +268,8 @@ const MyPets = (props: Props) => {
                         <MypetsCard
                             key={pet._id}
                             petname={pet.petname}
+                            breed={pet.breed}
+                            image={pet.image}
                             onClick={() => OpenDetails(pet._id)}
                         />
                     </div>

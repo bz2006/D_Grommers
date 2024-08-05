@@ -9,7 +9,7 @@ const NewsLetter = (props: Props) => {
 
 <div className='flex justify-center items-center w-full h-auto md:items-end md:justify-end md:mb-[-3.8rem] mb-[-3rem] md:pr-10'>
     <img
-        src="/footer-cont.png"
+        src="/footer-cont-min.webp"
         className="w-full h-auto md:w-[44%]"
         alt="Background Image"
     />

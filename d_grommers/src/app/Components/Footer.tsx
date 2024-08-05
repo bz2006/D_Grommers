@@ -31,72 +31,52 @@ const Footer: React.FC = () => {
                     <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
                         <div className="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 className="text-sm font-semibold leading-6 text-white">Solutions</h3>
+                                <h3 className="text-sm font-semibold leading-6 text-white">SECTIONS</h3>
                                 <ul role="list" className="mt-6 space-y-4">
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Marketing</a>
+                                        <a href="/breeds" className="text-sm leading-6 text-white hover:text-gray-300">Breeds</a>
                                     </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Analytics</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Commerce</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Insights</a>
-                                    </li>
+                                   
                                 </ul>
                             </div>
                             <div className="mt-10 md:mt-0">
-                                <h3 className="text-sm font-semibold leading-6 text-white">Support</h3>
+                                <h3 className="text-sm font-semibold leading-6 text-white">ACCOUNT</h3>
                                 <ul role="list" className="mt-6 space-y-4">
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Pricing</a>
+                                        <a href="/my-account" className="text-sm leading-6 text-white hover:text-gray-300">Your Account</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Documentation</a>
+                                        <a href="/my-account/my-pets" className="text-sm leading-6 text-white hover:text-gray-300">Your Pets</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Guides</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">API Status</a>
+                                        <a href="/my-account/schedules" className="text-sm leading-6 text-white hover:text-gray-300">Schedules</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div className="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 className="text-sm font-semibold leading-6 text-white">Company</h3>
+                                <h3 className="text-sm font-semibold leading-6 text-white">SUPPORT</h3>
                                 <ul role="list" className="mt-6 space-y-4">
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">About</a>
+                                        <a href="/contactus" className="text-sm leading-6 text-white hover:text-gray-300">Contact Us</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Blog</a>
+                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Privacy Policy</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Jobs</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Press</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Partners</a>
+                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Terms And Conditions</a>
                                     </li>
                                 </ul>
                             </div>
                             <div className="mt-10 md:mt-0">
-                                <h3 className="text-sm font-semibold leading-6 text-white">Legal</h3>
+                                <h3 className="text-sm font-semibold leading-6 text-white">COMPANY</h3>
                                 <ul role="list" className="mt-6 space-y-4">
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Claim</a>
+                                        <a href="/about" className="text-sm leading-6 text-white hover:text-gray-300">About D_Grommers</a>
                                     </li>
                                     <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Privacy</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Terms</a>
+                                        <a href="#" className="text-sm leading-6 text-white hover:text-gray-300">Read Our Blog</a>
                                     </li>
                                 </ul>
                             </div>

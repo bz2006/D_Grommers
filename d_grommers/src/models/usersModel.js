@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema({
         breed: {
             type: String,
         },
+        image:{
+            type:String
+        }
 
     }],
     addresses: [{

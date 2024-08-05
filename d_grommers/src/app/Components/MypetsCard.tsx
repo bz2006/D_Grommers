@@ -4,10 +4,13 @@ import React from 'react';
 type Props = {
     key: string;
     petname: string;
+    image: string;
+    breed:string;
     onClick: () => void;
 }
 
-const MypetsCard: React.FC<Props> = ({ petname, onClick }) => {
+const MypetsCard: React.FC<Props> = ({ petname,breed, onClick ,image}) => {
+    const cloudurl = "https://static-vision.s3.ap-south-1.amazonaws.com/"
     return (
         <div 
             onClick={onClick} 
@@ -15,7 +18,7 @@ const MypetsCard: React.FC<Props> = ({ petname, onClick }) => {
         >
             <div className="mb-4 md:mb-5 flex justify-center items-center mr-5">
                 <Image
-                    src="https://www.odysseyhouse.com.au/wordpress/wp-content/uploads/2018/02/golden-retriever-SQUARE@.jpg"
+                    src={cloudurl+image}
                     alt="Golden Retriever"
                     width={120}
                     height={120}
@@ -24,7 +27,7 @@ const MypetsCard: React.FC<Props> = ({ petname, onClick }) => {
             </div>
             <div className='flex flex-col items-center'>
                 <h1 className='text-lg text-black md:text-2xl font-bold text-center'>{petname}</h1>
-                <h4 className='text-sm text-black md:text-base text-center'>Golden Retriever</h4>
+                <h4 className='text-sm text-black md:text-base text-center'>{breed}</h4>
             </div>
         </div>
     );
